@@ -6,6 +6,8 @@ class DownloadsController < ApplicationController
   end
 
   def create
+    head :bad_request if UserItem.where(user: params[:user_id], item: params[:item_id]).any?
+
     UserItem.create(user_id: params[:user_id], item_id: params[:item_id])
   end
 end
