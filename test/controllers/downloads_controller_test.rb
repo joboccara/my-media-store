@@ -10,7 +10,7 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
     post downloads_url, params: { user_id: user.id, item_id: book_to_download_1.id }
     post downloads_url, params: { user_id: user.id, item_id: book_to_download_2.id }
 
-    get downloads_url, params: { user_id: user.id }
+    get downloads_url, params: { user_id: user.id, format: :json }
 
     downloaded_books = response.parsed_body['books']
     assert_equal 2, downloaded_books.count
