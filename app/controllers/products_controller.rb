@@ -1,5 +1,8 @@
 class ProductsController < ApplicationController
   def show
-    render json: Item.find(params[:id])
+    @item = Item.find(params[:id])
+    if (@item.kind == 'book')
+      @details = BookDetail.find_by(item: @item)
+    end
   end
 end

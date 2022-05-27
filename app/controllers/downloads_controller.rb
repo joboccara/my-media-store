@@ -1,3 +1,6 @@
+# GET /catalogs/:category => list product in catalog category
+# GET /catalog/item/:id => product detail
+# POST /catalog/item/:id/rating => set user rating
 class DownloadsController < ApplicationController
   def index
     downloaded_items = Download.includes(:item).where(user: params[:user_id]).map(&:item)
