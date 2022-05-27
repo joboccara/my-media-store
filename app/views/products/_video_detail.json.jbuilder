@@ -1,0 +1,1 @@
+json.duration details[:duration]
