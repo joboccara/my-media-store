@@ -1,7 +1,5 @@
 class ProductsController < ApplicationController
   def show
-    products = ProductRepository.new
-    product = products.get_product(params[:id])
-    render json: product
+    render json: ProductRepository.new.get_product(params[:id])
   end
 end
