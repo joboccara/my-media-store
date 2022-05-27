@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_27_124159) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_27_135855) do
   create_table "book_details", force: :cascade do |t|
     t.integer "item_id", null: false
     t.integer "page_count"
@@ -28,6 +28,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_124159) do
     t.index ["user_id"], name: "index_downloads_on_user_id"
   end
 
+  create_table "image_details", force: :cascade do |t|
+    t.integer "width"
+    t.integer "height"
+    t.integer "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_image_details_on_item_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "title"
     t.text "content"
@@ -43,7 +52,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_124159) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "video_details", force: :cascade do |t|
+    t.integer "duration"
+    t.integer "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_video_details_on_item_id"
+  end
+
   add_foreign_key "book_details", "items"
   add_foreign_key "downloads", "items"
   add_foreign_key "downloads", "users"
+  add_foreign_key "image_details", "items"
+  add_foreign_key "video_details", "items"
 end
