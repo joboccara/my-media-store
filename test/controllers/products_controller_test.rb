@@ -1,11 +1,12 @@
 require 'test_helper'
 
 class ProductsControllerTest < ActionDispatch::IntegrationTest
-  test 'gets a book with its details' do
-    item = Item.create!(kind: 'book', title: 'Item 1', content: 'Super item')
-    BookDetail.create!(page_count: 42, item: item)
+  repo = ProductRepository.new
 
-    get product_url(item.id, params: {format: :json })
+  test 'gets a book with its details' do
+    book = repo.create_book(title: 'Item 1', content: 'Super item', category: 'default', page_count: 42)
+
+    get product_url(book[:id], params: {format: :json })
 
     res = response.parsed_body
     assert_equal 'Item 1', res['title']
@@ -15,10 +16,9 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_nil res['duration']
   end
   test 'gets an image with its details' do
-    item = Item.create!(kind: 'image', title: 'Item 2', content: 'Super item')
-    ImageDetail.create!(width: 800, height: 600, item: item)
+    image = repo.create_image(title: 'Item 2', content: 'Super item', category: 'default', width: 800, height: 600)
 
-    get product_url(item.id, params: {format: :json })
+    get product_url(image[:id], params: {format: :json })
 
     res = response.parsed_body
     assert_equal 'Item 2', res['title']
@@ -28,10 +28,9 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_nil res['duration']
   end
   test 'gets a video with its details' do
-    item = Item.create!(kind: 'video', title: 'Item 3', content: 'Super item')
-    VideoDetail.create!(duration: 120, item: item)
+    video = repo.create_video(title: 'Item 3', content: 'Super item', category: 'default', duration: 120)
 
-    get product_url(item.id, params: {format: :json })
+    get product_url(video[:id], params: {format: :json })
 
     res = response.parsed_body
     assert_equal 'Item 3', res['title']
