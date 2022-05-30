@@ -1,6 +1,42 @@
 class ProductRepository
+  # @param title [String]
+  # @param content [String]
+  # @param category [String]
+  # @param page_count [Integer]
+  # @return [BookDto]
+  def create_book(title:, content:, category:, page_count:)
+    product = Item.create(kind: 'book', title: title, content: content, category: category)
+    details = BookDetail.create(item: product, page_count: page_count)
+    build_book_dto(product, details)
+  end
+
+  # @param title [String]
+  # @param content [String]
+  # @param category [String]
+  # @param width [Integer]
+  # @param height [Integer]
+  # @return [ImageDto]
+  def create_image(title:, content:, category:, width:, height:)
+    product = Item.create(kind: 'image', title: title, content: content, category: category)
+    details = ImageDetail.create(item: product, width: width, height: height)
+    build_image_dto(product, details)
+  end
+
+  # @param title [String]
+  # @param content [String]
+  # @param category [String]
+  # @param duration [Integer]
+  # @return [VideoDto]
+  def create_video(title:, content:, category:, duration:)
+    product = Item.create(kind: 'video', title: title, content: content, category: category)
+    details = VideoDetail.create(item: product, duration: duration)
+    build_video_dto(product, details)
+  end
+
   # Repository only return DTO, models are private entities to access data, not accessible from services & controllers
   # Business logic is not aware of how we store products (product & details)
+  # @param id [Integer]
+  # @return [BookDto, ImageDto, VideoDto]
   def get_product(id)
     product = Item.find(id)
     raise "Product not found #{id}" if product.nil?
@@ -10,6 +46,8 @@ class ProductRepository
     build_product_dto(product, book_details, image_details, video_details)
   end
 
+  # @param category [String]
+  # @return [[BookDto, ImageDto, VideoDto][]]
   def get_product_with_category(category)
     # other option: ActiveRecord::Associations::Preloader (https://thepaulo.medium.com/eager-loading-polymorphic-associations-in-ruby-on-rails-155a356c39d7)
     products = Item.where(category: category)
@@ -20,22 +58,12 @@ class ProductRepository
     products.map { |product| build_product_dto(product, book_details, image_details, video_details) }
   end
 
-  def create_book(title:, content:, category:, page_count:)
-    product = Item.create(kind: 'book', title: title, content: content, category: category)
-    details = BookDetail.create(item: product, page_count: page_count)
-    build_book_dto(product, details)
-  end
-
-  def create_image(title:, content:, category:, width:, height:)
-    product = Item.create(kind: 'image', title: title, content: content, category: category)
-    details = ImageDetail.create(item: product, width: width, height: height)
-    build_image_dto(product, details)
-  end
-
-  def create_video(title:, content:, category:, duration:)
-    product = Item.create(kind: 'video', title: title, content: content, category: category)
-    details = VideoDetail.create(item: product, duration: duration)
-    build_video_dto(product, details)
+  # @param now [Time]
+  # @return [BookDto[]]
+  def books_of_week(now)
+    books = Item.where(kind: 'book') # TODO: better filtering ^^
+    book_details = hash_by(BookDetail.where(item: books), :item_id)
+    books.map { |book| build_product_dto(book, book_details, {}, {}) }
   end
 
   private
@@ -44,6 +72,11 @@ class ProductRepository
     Hash[array.collect { |value| [value[attr], value] }]
   end
 
+  # @param product [Item]
+  # @param book_details [{item_id: BookDetail}]
+  # @param image_details [{item_id: ImageDetail}]
+  # @param video_details [{item_id: VideoDetail}]
+  # @return [BookDto, ImageDto, VideoDto]
   def build_product_dto(product, book_details, image_details, video_details)
     if product.kind == 'book'
       build_book_dto(product, book_details[product.id] || (raise "Missing details for book #{product.id}"))
@@ -60,14 +93,23 @@ class ProductRepository
   ImageDto = Struct.new(:id, :kind, :title, :category, :content, :width, :height)
   VideoDto = Struct.new(:id, :kind, :title, :category, :content, :duration)
 
+  # @param product [Item]
+  # @param details [BookDetail]
+  # @return [BookDto]
   def build_book_dto(product, details)
     BookDto.new(product.id, product.kind, product.title, product.category, product.content, details.page_count)
   end
 
+  # @param product [Item]
+  # @param details [ImageDetail]
+  # @return [ImageDto]
   def build_image_dto(product, details)
     ImageDto.new(product.id, product.kind, product.title, product.category, product.content, details.width, details.height)
   end
 
+  # @param product [Item]
+  # @param details [VideoDetail]
+  # @return [VideoDto]
   def build_video_dto(product, details)
     VideoDto.new(product.id, product.kind, product.title, product.category, product.content, details.duration)
   end
