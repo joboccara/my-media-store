@@ -8,5 +8,5 @@ elsif product.kind == 'image'
 elsif product.kind == 'video'
   json.partial! '/products/video_detail', details: product
 else
-  raise "Unknown item kind #{item.kind.inspect}"
+  raise "Unknown product kind #{product.kind.inspect}"
 end

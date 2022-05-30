@@ -1,11 +1,8 @@
-# GET /catalogs/:category => list product in catalog category
-# GET /catalog/item/:id => product detail
-# POST /catalog/item/:id/rating => set user rating
 class DownloadsController < ApplicationController
   def index
-    downloaded_items = Download.includes(:item).where(user: params[:user_id]).map(&:item)
-    downloaded_items_by_kind = downloaded_items.group_by{|item| item.kind + 's'}
-    render json: downloaded_items_by_kind
+    downloaded_products = Download.includes(:item).where(user: params[:user_id]).map(&:item)
+    downloaded_products_by_kind = downloaded_products.group_by { |product| product.kind }
+    render json: downloaded_products_by_kind
   end
 
   def create

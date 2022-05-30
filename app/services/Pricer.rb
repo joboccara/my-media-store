@@ -7,7 +7,7 @@ class Pricer
     elsif product.kind == 'video'
       product.duration.to_f / 60
     else
-      raise "Unknown item kind #{product.kind.inspect}"
+      raise "Unknown product kind #{product.kind.inspect}"
     end
   end
 end
