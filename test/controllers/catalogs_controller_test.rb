@@ -12,9 +12,13 @@ class CatalogsControllerTest < ActionDispatch::IntegrationTest
 
     res = response.parsed_body
     assert_equal 2, res.count
+
     assert_equal 'Item 1', res[0]['title']
     assert_equal 42, res[0]['page_count']
+    assert_equal 4.2, res[0]['price']
+
     assert_equal 'Item 2', res[1]['title']
     assert_equal 120, res[1]['duration']
+    assert_equal 2, res[1]['price']
   end
 end

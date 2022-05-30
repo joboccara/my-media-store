@@ -1,1 +1,1 @@
-json.duration details[:duration]
+json.duration details.duration

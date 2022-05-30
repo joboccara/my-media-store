@@ -1,2 +1,2 @@
-json.width details[:width]
-json.height details[:height]
+json.width details.width
+json.height details.height

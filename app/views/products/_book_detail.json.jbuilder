@@ -1,1 +1,1 @@
-json.page_count details[:page_count]
+json.page_count details.page_count
