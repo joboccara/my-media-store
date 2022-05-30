@@ -9,13 +9,11 @@ class ProductRepository
   end
 
   def get_product_with_category(category)
-    # other option: ActiveRecord::Associations::Preloader (https://thepaulo.medium.com/eager-loading-polymorphic-associations-in-ruby-on-rails-155a356c39d7)
-    items = Item.where(category: category)
-    grouped_items = items.group_by(&:kind)
-    book_details = hash_by(BookDetail.where(item: grouped_items['book']), :item_id)
-    image_details = hash_by(ImageDetail.where(item: grouped_items['image']), :item_id)
-    video_details = hash_by(VideoDetail.where(item: grouped_items['video']), :item_id)
-    items.map { |item| build_product_dto_from_hashes(item, book_details, image_details, video_details) }
+    build_products(Item.where(category: category))
+  end
+
+  def get_all_products
+    build_products(Item.all)
   end
 
   def create_book(title:, content:, category:, page_count:)
@@ -37,6 +35,15 @@ class ProductRepository
   end
 
   private
+
+  def build_products(items)
+    # other option: ActiveRecord::Associations::Preloader (https://thepaulo.medium.com/eager-loading-polymorphic-associations-in-ruby-on-rails-155a356c39d7)
+    grouped_items = items.group_by(&:kind)
+    book_details = hash_by(BookDetail.where(item: grouped_items['book']), :item_id)
+    image_details = hash_by(ImageDetail.where(item: grouped_items['image']), :item_id)
+    video_details = hash_by(VideoDetail.where(item: grouped_items['video']), :item_id)
+    items.map { |item| build_product_dto_from_hashes(item, book_details, image_details, video_details) }
+  end
 
   def hash_by(array, attr)
     Hash[array.collect { |item| [item[attr], item] }]

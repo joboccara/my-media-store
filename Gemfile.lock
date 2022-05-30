@@ -114,6 +114,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.15.0)
+    mocha (1.14.0)
     msgpack (1.5.1)
     net-imap (0.2.3)
       digest
@@ -228,6 +229,7 @@ DEPENDENCIES
   debug
   importmap-rails
   jbuilder
+  mocha
   pry-byebug
   puma (~> 5.0)
   rails (~> 7.0.2, >= 7.0.2.3)
