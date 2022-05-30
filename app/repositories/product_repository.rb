@@ -22,6 +22,17 @@ class ProductRepository
     build_product_dto(item, build_book_dto(details))
   end
 
+  def update_book(id, new_attributes)
+    validate_book_columns(new_attributes.keys)
+    item_attributes, book_details_attributes = new_attributes.partition { |key, _value| key.to_s.in? Item.column_names }
+    Item.update!(id, item_attributes.to_h) if item_attributes.any?
+    if book_details_attributes.any?
+      book_detail = BookDetail.find_by(item_id: id)
+      raise "Product not found #{id}" if book_detail.nil?
+      book_detail.update!(book_details_attributes.to_h)
+    end
+  end
+
   def create_image(title:, content:, category:, width:, height:)
     item = Item.create(kind: 'image', title: title, content: content, category: category)
     details = ImageDetail.create(item: item, width: width, height: height)
@@ -89,5 +100,11 @@ class ProductRepository
     {
       duration: details.duration
     }
+  end
+
+  def validate_book_columns(columns)
+    valid_columns = Item.column_names + BookDetail.column_names
+    are_columns_valid = (columns.map(&:to_s) - valid_columns).empty?
+    raise "Invalid columns #{columns.inspect} for books" unless are_columns_valid
   end
 end
