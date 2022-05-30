@@ -42,4 +42,23 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 120, res['duration']
     assert_equal 2, res['price']
   end
+
+  test 'simulate a book price' do
+    post product_simulate_url, params: {kind: 'book', page_count: 12}
+
+    res = response.parsed_body
+    assert_equal 1.2, res['price']
+  end
+  test 'simulate an image price' do
+    post product_simulate_url, params: {kind: 'image', width: 50, height: 50}
+
+    res = response.parsed_body
+    assert_equal 0.1, res['price']
+  end
+  test 'simulate a video price' do
+    post product_simulate_url, params: {kind: 'video', duration: 30}
+
+    res = response.parsed_body
+    assert_equal 0.5, res['price']
+  end
 end
