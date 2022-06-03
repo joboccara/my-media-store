@@ -15,4 +15,17 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Title of Video', products[1]['title']
     assert_equal 'Contents of Video', products[1]['content']
   end
+
+  test 'get the products of a month' do
+    book = Item.create(kind: 'book', title: 'Title of Book', content: 'Contents of Book', created_at: '2019-01-01')
+    video = Item.create(kind: 'video', title: 'Title of Video', content: 'Contents of Video', created_at: '2019-02-01')
+
+    get '/products?month=february', as: :json
+
+    products = response.parsed_body
+    assert_equal 1, products.count
+    assert_equal 'video', products[0]['kind']
+    assert_equal 'Title of Video', products[0]['title']
+    assert_equal 'Contents of Video', products[0]['content']
+  end
 end
