@@ -7,12 +7,18 @@ end
     build_products(Item.where(category: category))
   end
 
+  def get_product_of_month(month)
+    month_number = Date::MONTHNAMES.index(month)
+    month_number_string = "%02d" % month_number
+    build_products(Item.where("strftime('%m', created_at) = ?", month_number_string))
+end
+
   def get_all_products
     build_products(Item.all)
   end
 
-  def create_book(title:, content:, category:, page_count:)
-    item = Item.create!(kind: 'book', title: title, content: content, category: category)
+  def create_book(title:, content:, category:, page_count:, created_at: nil)
+    item = Item.create!(kind: 'book', title: title, content: content, category: category, created_at: created_at)
     book_details = BookDetail.create!(item: item, page_count: page_count)
     item_dto(item).merge(book_details_dto(book_details))
   end
@@ -23,8 +29,8 @@ end
     BookDetail.update(BookDetail.find_by(item_id: item_id).id, book_details_attributes) if book_details_attributes.present?
   end
 
-  def create_image(title:, content:, category:, width:, height:)
-    item = Item.create!(kind: 'image', title: title, content: content, category: category)
+  def create_image(title:, content:, category:, width:, height:, created_at: nil)
+    item = Item.create!(kind: 'image', title: title, content: content, category: category, created_at: created_at)
     image_details = ImageDetail.create!(item: item, width: width, height: height)
     item_dto(item).merge(image_details_dto(image_details))
   end
@@ -35,8 +41,8 @@ end
     ImageDetail.update(ImageDetail.find_by(item_id: item_id).id, image_details_attributes) if image_details_attributes.present?
   end
 
-  def create_video(title:, content:, category:, duration:)
-    item = Item.create!(kind: 'video', title: title, content: content, category: category)
+  def create_video(title:, content:, category:, duration:, created_at: nil)
+    item = Item.create!(kind: 'video', title: title, content: content, category: category, created_at: created_at)
     video_details = VideoDetail.create!(item: item, duration: duration)
     item_dto(item).merge(video_details_dto(video_details))
   end

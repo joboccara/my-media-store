@@ -4,6 +4,10 @@ class ProductsController < ApplicationController
   end
 
   def index
-    @products = ProductRepository.new.get_all_products
+    if (params[:month].present?)
+      @products = ProductRepository.new.get_product_of_month(params[:month].capitalize)
+    else
+      @products = Item.all
+    end
   end
 end
