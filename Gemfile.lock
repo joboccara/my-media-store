@@ -114,6 +114,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.15.0)
+    mocha (1.13.0)
     msgpack (1.5.1)
     net-imap (0.2.3)
       digest
@@ -193,6 +194,7 @@ GEM
       railties (>= 6.0.0)
     strscan (3.0.3)
     thor (1.2.1)
+    timecop (0.9.4)
     timeout (0.2.0)
     turbo-rails (1.1.1)
       actionpack (>= 6.0.0)
@@ -225,6 +227,7 @@ DEPENDENCIES
   debug
   importmap-rails
   jbuilder
+  mocha
   pry-byebug
   puma (~> 5.0)
   rails (~> 7.0.2, >= 7.0.2.3)
@@ -232,6 +235,7 @@ DEPENDENCIES
   sprockets-rails
   sqlite3 (~> 1.4)
   stimulus-rails
+  timecop
   turbo-rails
   tzinfo-data
   web-console
