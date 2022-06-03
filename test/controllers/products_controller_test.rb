@@ -44,14 +44,28 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     repo.create_book(title: 'Item 1', content: 'Super item', category: 'default', page_count: 42)
     repo.create_image(title: 'Item 2', content: 'Super item', category: 'default', width: 800, height: 600)
     repo.create_video(title: 'Item 3', content: 'Super item', category: 'default', duration: 120)
+    repo.create_video(title: 'Item 4', content: 'Super item', category: 'default', duration: 130)
 
     get products_url
 
-    res = response.parsed_body
-    assert_equal 3, res.size
-    assert_equal 'Item 1', res[0]['title']
-    assert_equal 'Item 2', res[1]['title']
-    assert_equal 'Item 3', res[2]['title']
+    products_by_kind = response.parsed_body
+
+    assert_equal 1, products_by_kind['books'].size
+    books = products_by_kind['books']
+    assert_equal 'Item 1', books[0]['title']
+    assert_equal 42, books[0]['page_count']
+    
+    images = products_by_kind['images']
+    assert_equal 1, images.size
+    assert_equal 'Item 2', images[0]['title']
+    assert_equal 800, images[0]['width']
+
+    videos = products_by_kind['videos']
+    assert_equal 2, videos.size
+    assert_equal 'Item 3', videos[0]['title']
+    assert_equal 120, videos[0]['duration']
+    assert_equal 'Item 4', videos[1]['title']
+    assert_equal 130, videos[1]['duration']
   end
 
   test 'get the products of a month' do
@@ -60,9 +74,9 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
 
     get '/products?month=february', as: :json
 
-    # products_by_kind = response.parsed_body
-    # assert_equal ['videos'], products_by_kind.keys
-    videos = response.parsed_body
+    products_by_kind = response.parsed_body
+    assert_equal ['videos'], products_by_kind.keys
+    videos = products_by_kind['videos']
     assert_equal 'video', videos[0]['kind']
     assert_equal 'Title of Video', videos[0]['title']
   end

@@ -7,7 +7,7 @@ class ProductsController < ApplicationController
     if (params[:month].present?)
       @products = ProductRepository.new.get_product_of_month(params[:month].capitalize)
     else
-      @products = Item.all
+      @products = ProductRepository.new.get_all_products
     end
   end
 end
