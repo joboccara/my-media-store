@@ -46,7 +46,7 @@ end
     ImageDetail.update(ImageDetail.find_by(item_id: item_id).id, image_details_attributes) if image_details_attributes.present?
   end
 
-  def create_video(title:, content:, category:, duration:, created_at: nil)
+  def create_video(title:, content:, category: nil, duration: nil, created_at: nil)
     item = Item.create!(kind: 'video', title: title, content: content, category: category, created_at: created_at)
     video_details = VideoDetail.create!(item: item, duration: duration)
     item_dto(item).merge(video_details_model_dto(video_details))
