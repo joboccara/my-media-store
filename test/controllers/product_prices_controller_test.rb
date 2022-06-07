@@ -11,23 +11,17 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     book = repo.create_book(title: 'Title of Book', content: 'Contents of Book')
 
     ENV['BOOK_PURCHASE_PRICE']  = '12'
-    get product_price_url(book[:id])
-    price = response.parsed_body
-    assert_equal 15, price.to_i
+    assert_equal 15, get_product_price(book[:id])
 
     ENV['BOOK_PURCHASE_PRICE']  = '16'
-    get product_price_url(book[:id])
-    price = response.parsed_body
-    assert_equal 20, price.to_i
+    assert_equal 20, get_product_price(book[:id])
 
     ENV.delete('BOOK_PURCHASE_PRICE')
   end
 
   test 'price of an image' do
     image = repo.create_image(title: 'Title of Image', content: 'Contents of Image')
-    get product_price_url(image[:id])
-    price = response.parsed_body
-    assert_equal 7, price.to_i
+    assert_equal 7, get_product_price(image[:id])
   end
 
   test 'price of a video' do
