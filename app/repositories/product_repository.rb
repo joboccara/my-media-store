@@ -20,7 +20,7 @@ end
   def create_book(title:, content:, category:, page_count:, created_at: nil)
     item = Item.create!(kind: 'book', title: title, content: content, category: category, created_at: created_at)
     book_details = BookDetail.create!(item: item, page_count: page_count)
-    item_dto(item).merge(book_details_dto(book_details))
+    item_dto(item).merge(book_details_model_dto(book_details))
   end
 
   def update_book(item_id:, **new_attributes)
@@ -31,8 +31,13 @@ end
 
   def create_image(title:, content:, category:, width:, height:, created_at: nil)
     item = Item.create!(kind: 'image', title: title, content: content, category: category, created_at: created_at)
-    image_details = ImageDetail.create!(item: item, width: width, height: height)
-    item_dto(item).merge(image_details_dto(image_details))
+    if ENV['IMAGES_FROM_EXTERNAL_SERVICE']
+      external_id = ImageExternalService.upload_image_details(width: width, height: height)
+      image_external_details = ImageExternalDetail.create!(item: item, external_id: external_id)
+    else
+      image_details = ImageDetail.create!(item: item, width: width, height: height)
+    end
+    item_dto(item).merge(image_details_dto(width: width, height: height))
   end
 
   def update_image(item_id:, **new_attributes)
@@ -44,7 +49,7 @@ end
   def create_video(title:, content:, category:, duration:, created_at: nil)
     item = Item.create!(kind: 'video', title: title, content: content, category: category, created_at: created_at)
     video_details = VideoDetail.create!(item: item, duration: duration)
-    item_dto(item).merge(video_details_dto(video_details))
+    item_dto(item).merge(video_details_model_dto(video_details))
   end
 
   def update_video(item_id:, **new_attributes)
@@ -57,14 +62,23 @@ end
 
   def build_products(items)
     book_details = BookDetail.where(item: items).to_a
-    image_details = ImageDetail.where(item: items).to_a
+    if ENV['IMAGES_FROM_EXTERNAL_SERVICE']
+      image_external_details = ImageExternalDetail.where(item: items).to_a
+    else
+      image_details = ImageDetail.where(item: items).to_a
+    end
     video_details = VideoDetail.where(item: items).to_a
     items.map do |item|
       belongs_to_item = ->(detail) { detail.item_id == item.id }
       case item.kind
-      when 'book' then details_dto = book_details_dto(book_details.find(&belongs_to_item))
-      when 'image' then details_dto = image_details_dto(image_details.find(&belongs_to_item))
-      when 'video' then details_dto = video_details_dto(video_details.find(&belongs_to_item))
+      when 'book' then details_dto = book_details_model_dto(book_details.find(&belongs_to_item))
+      when 'image'
+        details_dto = if ENV['IMAGES_FROM_EXTERNAL_SERVICE']
+          image_external_details_dto(image_external_details.find(&belongs_to_item))
+        else
+          image_details_model_dto(image_details.find(&belongs_to_item))
+        end
+      when 'video' then details_dto = video_details_model_dto(video_details.find(&belongs_to_item))
       end
       item_dto(item).merge(details_dto)
     end
@@ -80,20 +94,32 @@ end
     }
   end
 
-  def book_details_dto(book_details)
+  def book_details_model_dto(book_details)
     {
       page_count: book_details.page_count
     }
   end
 
-  def image_details_dto(image_details)
+  def image_details_model_dto(image_details)
+    image_details_dto(width: image_details.width, height: image_details.height)
+  end
+
+  def image_details_dto(width:, height:)
     {
-      width: image_details.width,
-      height: image_details.height
+      width: width,
+      height: height
     }
   end
 
-  def video_details_dto(video_details)
+  def image_external_details_dto(image_external_details)
+    details = ImageExternalService.get_image_details(image_external_details.external_id)
+    {
+      width: details[:width],
+      height: details[:height]
+    }
+  end
+
+  def video_details_model_dto(video_details)
     {
       duration: video_details.duration
     }

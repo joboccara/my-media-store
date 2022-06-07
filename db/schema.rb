@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_30_112328) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_07_083423) do
   create_table "book_details", force: :cascade do |t|
     t.integer "item_id", null: false
     t.integer "page_count"
@@ -34,7 +34,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_30_112328) do
     t.integer "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
     t.index ["item_id"], name: "index_image_details_on_item_id"
+  end
+
+  create_table "image_external_details", force: :cascade do |t|
+    t.integer "item_id", null: false
+    t.integer "external_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_image_external_details_on_item_id"
   end
 
   create_table "invoices", force: :cascade do |t|
@@ -72,6 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_30_112328) do
   add_foreign_key "downloads", "items"
   add_foreign_key "downloads", "users"
   add_foreign_key "image_details", "items"
+  add_foreign_key "image_external_details", "items"
   add_foreign_key "invoices", "users"
   add_foreign_key "video_details", "items"
 end
