@@ -1,4 +1,5 @@
 require "test_helper"
+require "csv"
 
 class ProductPricesControllerTest < ActionDispatch::IntegrationTest
   repo = ProductRepository.new
@@ -7,7 +8,26 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     Timecop.return
   end
 
-  test 'price of a book' do
+  test 'price of a book in the ISBN list' do
+    CSV.open(Rails.root.join('isbn_list.csv'), 'w') do |csv|
+      csv << ['ISBN', 'price']
+      csv << ['9781603095136', '14.99']
+      csv << ['9781603095099', '19.99']
+      csv << ['9781603095143', '9.99']
+      csv << ['9781603095051', '19.99']
+    end
+
+    book = repo.create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 10, is_hot: false)
+    assert_equal 19.99, get_product_price(book[:id])
+
+    ENV['BOOK_PURCHASE_PRICE']  = '12'
+    book = repo.create_book(title: 'Title of Book', isbn: '1234567890', purchase_price: 10, is_hot: false)
+    assert_equal 15, get_product_price(book[:id])
+    ENV.delete('BOOK_PURCHASE_PRICE')
+    File.delete(Rails.root.join('isbn_list.csv'))
+  end
+
+  test 'price of a book based on purchase price' do
     book = repo.create_book(title: 'Title of Book', isbn: '1', purchase_price: 10, is_hot: false)
 
     ENV['BOOK_PURCHASE_PRICE']  = '12'
@@ -40,6 +60,6 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
 
   def get_product_price(id)
     get product_price_url(id)
-    response.parsed_body.to_i
+    response.parsed_body.to_f
   end
 end
