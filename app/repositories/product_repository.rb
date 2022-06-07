@@ -17,7 +17,7 @@ end
     build_products(Item.all)
   end
 
-  def create_book(title:, content:, category:, page_count:, created_at: nil)
+  def create_book(title:, content:, category: nil, page_count: nil, created_at: nil)
     item = Item.create!(kind: 'book', title: title, content: content, category: category, created_at: created_at)
     book_details = BookDetail.create!(item: item, page_count: page_count)
     item_dto(item).merge(book_details_model_dto(book_details))
