@@ -1,9 +1,9 @@
 class NewsletterJob < ApplicationJob
   def perform(mail_sender)
     products = ProductRepository.new.get_all_products
-    mail_contents = products.group_by{|product| product[:category]}.map do |category, products|
+    mail_contents = products.group_by{|product| product[:kind]}.map do |kind, products|
       <<~PRODUCT
-        #{category}
+        #{kind}s
         #{products.map{|product| product_section(product)}.join("\n")}
       PRODUCT
     end.join
@@ -14,11 +14,11 @@ class NewsletterJob < ApplicationJob
 
   def product_section(product)
     details =  case product[:kind]
-    when 'book' then "#{product[:page_count]} pages"
+    when 'book' then "#{product[:isbn]}"
     when 'image' then "#{product[:width]}x#{product[:height]}"
     when 'video' then "#{product[:duration]} seconds"
     else raise "Unknown product kind #{product[:kind]}"
     end
-    "#{product[:title]} - #{product[:kind]} - #{details}"
+    "#{product[:title]} - #{details}"
   end
 end

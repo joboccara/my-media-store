@@ -13,7 +13,9 @@
 ActiveRecord::Schema[7.0].define(version: 2022_06_07_083423) do
   create_table "book_details", force: :cascade do |t|
     t.integer "item_id", null: false
-    t.integer "page_count"
+    t.string "isbn"
+    t.float "purchase_price"
+    t.boolean "is_hot"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_book_details_on_item_id"
@@ -29,12 +31,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_07_083423) do
   end
 
   create_table "image_details", force: :cascade do |t|
+    t.integer "item_id", null: false
     t.integer "width"
     t.integer "height"
-    t.integer "item_id", null: false
+    t.string "source"
+    t.string "format"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "external_id"
     t.index ["item_id"], name: "index_image_details_on_item_id"
   end
 
@@ -57,10 +60,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_07_083423) do
   create_table "items", force: :cascade do |t|
     t.string "title"
     t.text "content"
+    t.string "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "kind"
-    t.string "category"
   end
 
   create_table "users", force: :cascade do |t|
@@ -70,8 +72,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_07_083423) do
   end
 
   create_table "video_details", force: :cascade do |t|
-    t.integer "duration"
     t.integer "item_id", null: false
+    t.integer "duration"
+    t.string "quality"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_video_details_on_item_id"

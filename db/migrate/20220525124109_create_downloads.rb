@@ -1,6 +1,6 @@
-class CreateUserItems < ActiveRecord::Migration[7.0]
+class CreateDownloads < ActiveRecord::Migration[7.0]
   def change
-    create_table :user_items do |t|
+    create_table :downloads do |t|
       t.references :user, null: false, foreign_key: true
       t.references :item, null: false, foreign_key: true
 

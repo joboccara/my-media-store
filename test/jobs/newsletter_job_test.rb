@@ -4,16 +4,17 @@ class NewsletterJobTest < ActiveSupport::TestCase
   repo = ProductRepository.new
 
   test 'it sends a newsletter with the existing products' do
-    repo.create_book(title: 'Item 1', content: 'Super item', category: 'star-wars', page_count: 42)
-    repo.create_video(title: 'Item 2', content: 'Great item', category: 'star-wars', duration: 120)
-    repo.create_image(title: 'Item 3', content: 'Big item', category: 'other', width: 800, height: 600)
+    repo.create_book(title: 'Item 1', isbn: '1234567890', purchase_price: 42, is_hot: false)
+    repo.create_video(title: 'Item 2', duration: 120, quality: 'HD')
+    repo.create_image(title: 'Item 3', width: 800, height: 600, source: 'unknown', format: 'jpg')
 
     expected_mail_content = <<~MAIL
-    star-wars
-    Item 1 - book - 42 pages
-    Item 2 - video - 120 seconds
-    other
-    Item 3 - image - 800x600
+    books
+    Item 1 - 1234567890
+    videos
+    Item 2 - 120 seconds
+    images
+    Item 3 - 800x600
     MAIL
 
     mail_sender = mock

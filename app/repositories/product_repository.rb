@@ -1,25 +1,25 @@
 class ProductRepository
   def get_product(id)
     build_products([Item.find(id)]).first
-end
+  end
 
-  def get_product_with_category(category)
-    build_products(Item.where(category: category))
+  def get_product_with_kind(kind)
+    build_products(Item.where(kind: kind))
   end
 
   def get_product_of_month(month)
     month_number = Date::MONTHNAMES.index(month)
     month_number_string = "%02d" % month_number
     build_products(Item.where("strftime('%m', created_at) = ?", month_number_string))
-end
+  end
 
   def get_all_products
     build_products(Item.all)
   end
 
-  def create_book(title:, content:, category: nil, page_count: nil, created_at: nil)
-    item = Item.create!(kind: 'book', title: title, content: content, category: category, created_at: created_at)
-    book_details = BookDetail.create!(item: item, page_count: page_count)
+  def create_book(title:, content: 'content', isbn:, purchase_price:, is_hot:, created_at: nil)
+    item = Item.create!(kind: 'book', title: title, content: content, created_at: created_at)
+    book_details = BookDetail.create!(item: item, isbn: isbn, purchase_price: purchase_price, is_hot: is_hot)
     item_dto(item).merge(book_details_model_dto(book_details))
   end
 
@@ -29,15 +29,15 @@ end
     BookDetail.update(BookDetail.find_by(item_id: item_id).id, book_details_attributes) if book_details_attributes.present?
   end
 
-  def create_image(title:, content:, category: nil, width: nil, height: nil, created_at: nil)
-    item = Item.create!(kind: 'image', title: title, content: content, category: category, created_at: created_at)
+  def create_image(title:, content: 'content', width:, height:, source:, format:, created_at: nil)
+    item = Item.create!(kind: 'image', title: title, content: content, created_at: created_at)
     if ENV['IMAGES_FROM_EXTERNAL_SERVICE']
       external_id = ImageExternalService.upload_image_details(width: width, height: height)
       image_external_details = ImageExternalDetail.create!(item: item, external_id: external_id)
     else
-      image_details = ImageDetail.create!(item: item, width: width, height: height)
+      image_details = ImageDetail.create!(item: item, width: width, height: height, source: source, format: format)
     end
-    item_dto(item).merge(image_details_dto(width: width, height: height))
+    item_dto(item).merge(image_details_dto(width: width, height: height, source: source, format: format))
   end
 
   def update_image(item_id:, **new_attributes)
@@ -46,9 +46,9 @@ end
     ImageDetail.update(ImageDetail.find_by(item_id: item_id).id, image_details_attributes) if image_details_attributes.present?
   end
 
-  def create_video(title:, content:, category: nil, duration: nil, created_at: nil)
-    item = Item.create!(kind: 'video', title: title, content: content, category: category, created_at: created_at)
-    video_details = VideoDetail.create!(item: item, duration: duration)
+  def create_video(title:, content: 'content', duration:, quality:, created_at: nil)
+    item = Item.create!(kind: 'video', title: title, content: content, created_at: created_at)
+    video_details = VideoDetail.create!(item: item, duration: duration, quality: quality)
     item_dto(item).merge(video_details_model_dto(video_details))
   end
 
@@ -89,25 +89,28 @@ end
       id: item.id,
       title: item.title,
       content: item.content,
-      category: item.category,
       kind: item.kind
     }
   end
 
   def book_details_model_dto(book_details)
     {
-      page_count: book_details.page_count
+      isbn: book_details.isbn,
+      purchase_price: book_details.purchase_price,
+      is_hot: book_details.is_hot
     }
   end
 
   def image_details_model_dto(image_details)
-    image_details_dto(width: image_details.width, height: image_details.height)
+    image_details_dto(width: image_details.width, height: image_details.height, source: image_details.source, format: image_details.format)
   end
 
-  def image_details_dto(width:, height:)
+  def image_details_dto(width:, height:, source:, format:)
     {
       width: width,
-      height: height
+      height: height,
+      source: source,
+      format: format
     }
   end
 
@@ -115,13 +118,16 @@ end
     details = ImageExternalService.get_image_details(image_external_details.external_id)
     {
       width: details[:width],
-      height: details[:height]
+      height: details[:height],
+      source: details[:source],
+      format: details[:format]
     }
   end
 
   def video_details_model_dto(video_details)
     {
-      duration: video_details.duration
+      duration: video_details.duration,
+      quality: video_details.quality
     }
   end
 
