@@ -29,7 +29,7 @@ end
     BookDetail.update(BookDetail.find_by(item_id: item_id).id, book_details_attributes) if book_details_attributes.present?
   end
 
-  def create_image(title:, content:, category:, width:, height:, created_at: nil)
+  def create_image(title:, content:, category: nil, width: nil, height: nil, created_at: nil)
     item = Item.create!(kind: 'image', title: title, content: content, category: category, created_at: created_at)
     if ENV['IMAGES_FROM_EXTERNAL_SERVICE']
       external_id = ImageExternalService.upload_image_details(width: width, height: height)

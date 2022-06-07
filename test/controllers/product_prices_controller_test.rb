@@ -16,5 +16,13 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     price = response.parsed_body
     assert_equal 20, price.to_i
 
+    ENV.delete('BOOK_PURCHASE_PRICE')
+  end
+
+  test 'price of an image' do
+    image = repo.create_image(title: 'Title of Image', content: 'Contents of Image')
+    get product_price_url(image[:id])
+    price = response.parsed_body
+    assert_equal 7, price.to_i
   end
 end
