@@ -2,20 +2,25 @@ class ProductPricesController < ApplicationController
   def show
     products = ProductRepository.new
     product = products.get_product(params[:id])
-    price = case product[:kind]
+    price = price_calculator(product[:kind]).compute(product)
+
+    render json: price
+  end
+
+  private
+
+  def price_calculator(kind)
+    base_price_calculator = case kind
     when 'book'
       if File.exist?(Rails.root.join('isbn_list.csv'))
         _csv_header, *isbn_csv_list = CSV.read(Rails.root.join('isbn_list.csv'))
         isbn_price_list = isbn_csv_list.to_h { |row| [row[0], row[1].to_f] }
       end
-      BookPriceCalculator.new(isbn_price_list || {}).compute(product)
-    when 'image' then ImagePriceCalculator.new.compute(product)
-    when 'video' then VideoPriceCalculator.new.compute(product)
+      BookPriceCalculator.new(isbn_price_list || {})
+    when 'image' then ImagePriceCalculator.new
+    when 'video' then VideoPriceCalculator.new
     end
 
-    premium_product = product[:title].downcase.include? 'premium'
-    price_with_premium = premium_product ? price * 1.05 : price
-
-    render json: price_with_premium
+    PremiumCalculator.new(base_price_calculator)
   end
 end
