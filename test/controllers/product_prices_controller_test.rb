@@ -8,6 +8,14 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     Timecop.return
   end
 
+  test 'price of a book based on purchase price' do
+    book1 = repo.create_book(title: 'Title of Book1', isbn: '1', purchase_price: 12, is_hot: false)
+    assert_equal 15, get_product_price(book1[:id])
+
+    book2 = repo.create_book(title: 'Title of Book2', isbn: '1', purchase_price: 16, is_hot: false)
+    assert_equal 20, get_product_price(book2[:id])
+  end
+
   test 'price of a book in the ISBN list' do
     begin
       CSV.open(Rails.root.join('isbn_list.csv'), 'w') do |csv|
@@ -18,28 +26,44 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
         csv << ['9781603095051', '19.99']
       end
 
-      book = repo.create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 10, is_hot: false)
+      book = repo.create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
       assert_equal 19.99, get_product_price(book[:id])
 
-      ENV['BOOK_PURCHASE_PRICE']  = '12'
-      book = repo.create_book(title: 'Title of Book', isbn: '1234567890', purchase_price: 10, is_hot: false)
-      assert_equal 15, get_product_price(book[:id])
-      ENV.delete('BOOK_PURCHASE_PRICE')
+      book = repo.create_book(title: 'Title of Book', isbn: '1234567890', purchase_price: 16, is_hot: false)
+      assert_equal 20, get_product_price(book[:id])
     ensure
       File.delete(Rails.root.join('isbn_list.csv'))
     end
   end
 
-  test 'price of a book based on purchase price' do
-    book = repo.create_book(title: 'Title of Book', isbn: '1', purchase_price: 10, is_hot: false)
+  test 'hot books are fixed during weekdays' do
+    book = repo.create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 14, is_hot: true)
+    Timecop.travel(Time.new(2022, 1, 3)) # Monday
+    assert_equal 9.99, get_product_price(book[:id])
+    Timecop.travel(Time.new(2022, 1, 4)) # Tuesday
+    assert_equal 9.99, get_product_price(book[:id])
+    Timecop.travel(Time.new(2022, 1, 5)) # Wednesday
+    assert_equal 9.99, get_product_price(book[:id])
+    Timecop.travel(Time.new(2022, 1, 6)) # Thursday
+    assert_equal 9.99, get_product_price(book[:id])
+    Timecop.travel(Time.new(2022, 1, 7)) # Friday
+    assert_equal 9.99, get_product_price(book[:id])
+  end
 
-    ENV['BOOK_PURCHASE_PRICE']  = '12'
-    assert_equal 15, get_product_price(book[:id])
-
-    ENV['BOOK_PURCHASE_PRICE']  = '16'
-    assert_equal 20, get_product_price(book[:id])
-
-    ENV.delete('BOOK_PURCHASE_PRICE')
+  test 'hot books are fixed during weekends' do
+    begin
+      CSV.open(Rails.root.join('isbn_list.csv'), 'w') do |csv|
+        csv << ['ISBN', 'price']
+        csv << ['9781603095136', '14.99']
+      end
+      book = repo.create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 14, is_hot: true)
+      Timecop.travel(Time.new(2022, 1, 8)) # Saturday
+      assert_equal 9.99, get_product_price(book[:id])
+      Timecop.travel(Time.new(2022, 1, 9)) # Sunday
+      assert_equal 9.99, get_product_price(book[:id])
+    ensure
+      File.delete(Rails.root.join('isbn_list.csv'))
+    end
   end
 
   test 'price of an image' do
