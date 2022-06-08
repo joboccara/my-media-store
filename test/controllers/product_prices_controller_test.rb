@@ -66,7 +66,40 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'price of an image' do
+  test 'images from NationalGeographic are sold at .02$/9600px' do
+    image = repo.create_image(title: 'Title of Image', width: 800, height: 600, source: 'NationalGeographic', format: 'jpg')
+    assert_price_equal 1, get_product_price(image[:id])
+  end
+
+  test 'images from Getty are sold at 1 when below 1280x720' do
+    image = repo.create_image(title: 'Title of Image', width: 1280, height: 720, source: 'Getty', format: 'jpg')
+    assert_price_equal 1, get_product_price(image[:id])
+  end
+
+  test 'images from Getty are sold at 3 when below 1920x1080' do
+    image1 = repo.create_image(title: 'Title of Image1', width: 1281, height: 720, source: 'Getty', format: 'jpg')
+    assert_price_equal 3, get_product_price(image1[:id])
+
+    image2 = repo.create_image(title: 'Title of Image2', width: 1920, height: 1080, source: 'Getty', format: 'jpg')
+    assert_price_equal 3, get_product_price(image2[:id])
+  end
+
+  test 'images from Getty are sold at 5 when above 1920x1080' do
+    image = repo.create_image(title: 'Title of Image', width: 1921, height: 1080, source: 'Getty', format: 'jpg')
+    assert_price_equal 5, get_product_price(image[:id])
+  end
+
+  test 'images from Getty in raw format are at 10' do
+    image1 = repo.create_image(title: 'Title of Image1', width: 800, height: 600, source: 'Getty', format: 'raw')
+    image2 = repo.create_image(title: 'Title of Image2', width: 1920, height: 1080, source: 'Getty', format: 'raw')
+    image3 = repo.create_image(title: 'Title of Image3', width: 1921, height: 1080, source: 'Getty', format: 'raw')
+
+    assert_price_equal 10, get_product_price(image1[:id])
+    assert_price_equal 10, get_product_price(image2[:id])
+    assert_price_equal 10, get_product_price(image3[:id])
+  end
+
+  test 'price of another image' do
     image = repo.create_image(title: 'Title of Image', width: 800, height: 600, source: 'unknown', format: 'jpg')
     assert_price_equal 7, get_product_price(image[:id])
   end
