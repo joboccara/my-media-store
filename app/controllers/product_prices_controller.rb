@@ -12,6 +12,10 @@ class ProductPricesController < ApplicationController
     when 'image' then ImagePriceCalculator.new.compute(product)
     when 'video' then VideoPriceCalculator.new.compute(product)
     end
-    render json: price
+
+    premium_product = product[:title].downcase.include? 'premium'
+    price_with_premium = premium_product ? price * 1.05 : price
+
+    render json: price_with_premium
   end
 end

@@ -1,10 +1,9 @@
 class ImagePriceCalculator
-  IMAGE_FIXED_PRICE = 7
   def compute(image)
     if image[:source] == 'NationalGeographic'
       pixels(image) * 0.02 / 9600
     elsif image[:source] == 'Getty'
-        return 10 if image[:format] ==  'raw'
+      return 10 if image[:format] ==  'raw'
       if pixels(image) <= 1280 * 720
         1
       elsif pixels(image) <= 1920 * 1080
@@ -13,7 +12,7 @@ class ImagePriceCalculator
         5
       end
     else
-      IMAGE_FIXED_PRICE
+      7
     end
   end
 

@@ -144,6 +144,24 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     assert_price_equal 7.2, get_product_price(video[:id])
   end
 
+  test 'the price is bumped +5% if the title contains "premium"' do
+    book1 = repo.create_book(title: 'Title of Book', isbn: '1', purchase_price: 12, is_hot: false)
+    assert_price_equal 15, get_product_price(book1[:id])
+    book = repo.create_book(title: 'Title of premium Book', isbn: '1', purchase_price: 12, is_hot: false)
+    assert_price_equal 15.75, get_product_price(book[:id])
+
+    image = repo.create_image(title: 'Title of Image', width: 800, height: 600, source: 'unknown', format: 'jpg')
+    assert_price_equal 7, get_product_price(image[:id])
+
+    image = repo.create_image(title: 'Premium title of Image', width: 800, height: 600, source: 'unknown', format: 'jpg')
+    assert_price_equal 7.35, get_product_price(image[:id])
+
+    video = repo.create_video(title: 'Title of Video', duration: 150, quality: '4k')
+    assert_price_equal 12, get_product_price(video[:id])
+    video = repo.create_video(title: 'Title of Video premium', duration: 150, quality: '4k')
+    assert_price_equal 12.6, get_product_price(video[:id])
+  end
+
   private
 
   def get_product_price(id)
