@@ -1,5 +1,4 @@
 class ProductPricesController < ApplicationController
-  IMAGE_FIXED_PRICE = 7
   def show
     products = ProductRepository.new
     product = products.get_product(params[:id])
@@ -10,7 +9,7 @@ class ProductPricesController < ApplicationController
         isbn_price_list = isbn_csv_list.to_h { |row| [row[0], row[1].to_f] }
       end
       BookPriceCalculator.new(isbn_price_list || {}).compute(product)
-    when 'image' then IMAGE_FIXED_PRICE
+    when 'image' then ImagePriceCalculator.new.compute(product)
     when 'video' then VideoPriceCalculator.new.compute(product)
     end
     render json: price
