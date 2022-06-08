@@ -85,6 +85,14 @@ class ProductPricesControllerTest < ActionDispatch::IntegrationTest
     assert_price_equal 6, get_product_price(video61[:id])
   end
 
+  test 'price of SD videos is 1 per started minute' do
+    Timecop.travel Time.new(2022, 1, 1) + 6.hours
+    video60 = repo.create_video(title: 'Title of Video', duration: 59, quality: 'SD')
+    assert_price_equal 1, get_product_price(video60[:id])
+    video61 = repo.create_video(title: 'Title of Video', duration: 60, quality: 'SD')
+    assert_price_equal 2, get_product_price(video61[:id])
+  end
+
   test 'the price of a video is reduced during the night' do
     video = repo.create_video(title: 'Title of Video', duration: 150, quality: '4k')
     Timecop.travel Time.new(2022, 1, 1) + 5.hours - 1.minute
