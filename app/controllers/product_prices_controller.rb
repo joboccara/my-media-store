@@ -11,7 +11,7 @@ class ProductPricesController < ApplicationController
       end
       BookPriceCalculator.new(isbn_price_list || {}).compute(product)
     when 'image' then IMAGE_FIXED_PRICE
-    when 'video' then (5 <= Time.now.hour && Time.now.hour < 22) ? 15 : 9
+    when 'video' then VideoPriceCalculator.new.compute(product)
     end
     render json: price
   end
