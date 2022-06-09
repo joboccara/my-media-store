@@ -30,22 +30,24 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'gets an image with its details from an external service' do
-    ENV['IMAGES_FROM_EXTERNAL_SERVICE'] = 'true'
-    IMAGE_EXTERNAL_ID = 42
-    ImageExternalService.expects(:upload_image_details).with(width: 800, height: 600).returns(IMAGE_EXTERNAL_ID)
-    ImageExternalService.expects(:get_image_details).with(IMAGE_EXTERNAL_ID).returns({width: 800, height: 600})
+    begin
+      ENV['IMAGES_FROM_EXTERNAL_SERVICE'] = 'true'
+      IMAGE_EXTERNAL_ID = 42
+      ImageExternalService.expects(:upload_image_details).with(width: 800, height: 600).returns(IMAGE_EXTERNAL_ID)
+      ImageExternalService.expects(:get_image_details).with(IMAGE_EXTERNAL_ID).returns({width: 800, height: 600})
 
-    image = repo.create_image(title: 'Item 2', width: 800, height: 600, source: 'unknown', format: 'jpg')
+      image = repo.create_image(title: 'Item 2', width: 800, height: 600, source: 'unknown', format: 'jpg')
 
-    get product_url(image[:id])
+      get product_url(image[:id])
 
-    res = response.parsed_body
-    assert_equal 'Item 2', res['title']
-    assert_equal 'image', res['kind']
-    assert_nil res['page_count']
-    assert_equal 800, res['width']
-    assert_nil res['duration']
-    ENV.delete('IMAGES_FROM_EXTERNAL_SERVICE')
+      res = response.parsed_body
+      assert_equal 'Item 2', res['title']
+      assert_equal 'image', res['kind']
+      assert_equal 800, res['width']
+      assert_nil res['duration']
+    ensure
+      ENV.delete('IMAGES_FROM_EXTERNAL_SERVICE')
+    end
   end
 
   test 'gets a video with its details' do
