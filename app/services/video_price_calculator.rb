@@ -10,6 +10,15 @@ class VideoPriceCalculator
     (5 <= Time.now.hour && Time.now.hour < 22) ? daytime_price : daytime_price * 0.6
   end
 
+  def expected_attributes
+    [:duration, :quality]
+  end
+
+  def validate_input(video)
+    missing_attributes = expected_attributes - video.keys
+    return missing_attributes.empty? ? [true, nil] : [false, "missing parameters for pricing videos: #{missing_attributes.join(', ')}"]
+  end
+
   private
 
   def started_minutes(video)

@@ -8,4 +8,8 @@ class PremiumCalculator
     premium_product = product[:title].downcase.include? 'premium'
     premium_price = premium_product ? base_price * 1.05 : base_price
   end
+
+  def expected_attributes
+    @base_price_calculator.expected_attributes + [:title]
+  end
 end

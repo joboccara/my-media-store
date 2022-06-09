@@ -16,6 +16,15 @@ class ImagePriceCalculator
     end
   end
 
+  def expected_attributes
+    [:width, :height, :source, :format]
+  end
+
+  def validate_input(image)
+    missing_attributes = expected_attributes - image.keys
+    return missing_attributes.empty? ? [true, nil] : [false, "missing parameters for pricing images: #{missing_attributes.join(', ')}"]
+  end
+
   private
 
   def pixels(image)

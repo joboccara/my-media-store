@@ -17,4 +17,8 @@ class PriceCalculator
   def compute(product)
     @calculator.compute product
   end
+
+  def expected_attributes
+    @calculator.expected_attributes
+  end
 end
