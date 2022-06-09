@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ProductPricesControllerTest < ActionDispatch::IntegrationTest
+class Iteration1Test < ActionDispatch::IntegrationTest
   teardown do
     Timecop.return
   end
