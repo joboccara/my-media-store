@@ -26,7 +26,11 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Item 2', res['title']
     assert_equal 'image', res['kind']
     assert_equal 800, res['width']
+    assert_equal 600, res['height']
+    assert_equal 'unknown', res['source']
+    assert_equal 'jpg', res['format']
     assert_nil res['duration']
+    assert_nil res['is_hot']
   end
 
   test 'gets an image with its details from an external service' do
@@ -59,6 +63,8 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'video', res['kind']
     assert_equal 120, res['duration']
     assert_equal 'FullHD', res['quality']
+    assert_nil res['is_hot']
+    assert_nil res['width']
   end
 
   test 'gets all products' do
