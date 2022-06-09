@@ -51,6 +51,7 @@ class PriceSimulationsControllerTest < ActionDispatch::IntegrationTest
 
   def get_price(**params)
     get price_simulation_url, params: params
+    assert_equal 200, response.status
     res = JSON.parse(response.body)
     assert_equal res.keys, ['price']
     res['price'].to_f
@@ -58,6 +59,7 @@ class PriceSimulationsControllerTest < ActionDispatch::IntegrationTest
 
   def get_pricing_error(**params)
     get price_simulation_url, params: params
+    assert_equal 400, response.status
     res = JSON.parse(response.body)
     assert_equal res.keys, ['error']
     res['error']

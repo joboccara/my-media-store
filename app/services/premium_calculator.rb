@@ -12,4 +12,8 @@ class PremiumCalculator
   def expected_attributes
     @base_price_calculator.expected_attributes + [:title]
   end
+
+  def parse_attribute(key, value)
+    @base_price_calculator.parse_attribute(key, value)
+  end
 end

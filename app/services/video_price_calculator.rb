@@ -14,9 +14,11 @@ class VideoPriceCalculator
     [:duration, :quality]
   end
 
-  def validate_input(video)
-    missing_attributes = expected_attributes - video.keys
-    return missing_attributes.empty? ? [true, nil] : [false, "missing parameters for pricing videos: #{missing_attributes.join(', ')}"]
+  def parse_attribute(key, value)
+    case key
+    when 'duration' then value.to_i
+    else value
+    end
   end
 
   private

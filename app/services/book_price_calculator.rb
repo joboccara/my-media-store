@@ -17,8 +17,11 @@ class BookPriceCalculator
     [:isbn, :purchase_price, :is_hot]
   end
 
-  def validate_input(book)
-    missing_attributes = expected_attributes - book.keys
-    return missing_attributes.empty? ? [true, nil] : [false, "missing parameters for pricing books: #{missing_attributes.join(', ')}"]
+  def parse_attribute(key, value)
+    case key
+    when 'purchase_price' then value.to_f
+    when 'is_hot' then value == 'true'
+    else value
+    end
   end
 end

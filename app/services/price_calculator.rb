@@ -25,4 +25,8 @@ class PriceCalculator
   def expected_attributes
     @calculator.expected_attributes
   end
+
+  def parse_attribute(key, value)
+    @calculator.parse_attribute(key, value)
+  end
 end

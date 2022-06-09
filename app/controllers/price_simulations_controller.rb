@@ -1,39 +1,29 @@
 class PriceSimulationsController < ApplicationController
   def compute
-    product_attributes = {}
-    params.each { |key, value| product_attributes[key.to_sym] = product_attribute(key, value) }
-
     begin
-      price_calculator = PriceCalculator.new(product_attributes[:kind])
+      price_calculator = PriceCalculator.new(params[:kind])
     rescue PriceCalculator::UnknownKindError => e
       return render json: { error: e.message }, status: :bad_request
     end
 
-    is_valid, error_message = validate_input(price_calculator, product_attributes)
-    if is_valid
-      render json: { price: price_calculator.compute(product_attributes) }
-    else
+    product_attributes, error_message = parse_inputs(price_calculator, params)
+    if error_message
       render json: { error: error_message }, status: :bad_request
+    else
+      render json: { price: price_calculator.compute(product_attributes) }
     end
   end
 
   private
 
-  def validate_input(price_calculator, product)
-    missing_attributes = price_calculator.expected_attributes - product.keys
-    return missing_attributes.empty? ?
-      [true, nil] :
-      [false, "missing parameters for pricing #{product[:kind]}s: #{missing_attributes.sort.join(', ')}"]
-  end
-
-  def product_attribute(key, value)
-    case key
-    when 'purchase_price' then value.to_f
-    when 'is_hot' then value == 'true'
-    when 'width' then value.to_i
-    when 'height' then value.to_i
-    when 'duration' then value.to_i
-    else value
+  def parse_inputs(price_calculator, params)
+    missing_attributes = price_calculator.expected_attributes - params.keys.map(&:to_sym)
+    if missing_attributes.any?
+      return [nil, "missing parameters for pricing #{params[:kind]}s: #{missing_attributes.sort.join(', ')}"]
     end
+
+    product_attributes = {}
+    params.each { |key, value| product_attributes[key.to_sym] = price_calculator.parse_attribute(key, value) }
+    [product_attributes, nil]
   end
 end
