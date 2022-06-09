@@ -3,7 +3,7 @@ require 'test_helper'
 class PurchasesControllerTest < ActionDispatch::IntegrationTest
   repo = ProductRepository.new
 
-  test 'can purchase products' do
+  test 'users can purchase products' do
     alice = User.create(first_name: 'Alice')
     bob = User.create(first_name: 'Bob')
 
@@ -30,7 +30,7 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
     # No downloads before purchase
     get downloads_url, params: { user_id: user.id }
     downloaded_books = response.parsed_body['books']
-    assert_equal nil, downloaded_books
+    assert_nil downloaded_books
 
     post purchases_url, params: { user_id: user.id, product_id: book[:id] }
 
@@ -41,19 +41,31 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Title of book', downloaded_books[0]['title']
   end
 
+  test 'purchases contain a reference to the product purchased' do
+    user = User.create(first_name: 'Alice')
+    book = repo.create_book(title: 'Title of book', isbn: '1', purchase_price: 42, is_hot: false)
+
+    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
+
+    get purchases_url, params: { user_id: user.id, format: :json }
+    purchased_book = response.parsed_body[0]
+    assert_equal 'Title of book', purchased_book['title']
+    assert_equal book[:id], purchased_book['item_id']
+  end
+
   test 'the title in the invoice does not change' do
-    alice = User.create(first_name: 'Alice')
+    user = User.create(first_name: 'Alice')
     repo = ProductRepository.new
-    alice_book = repo.create_book(title: 'Book', isbn: '1', purchase_price: 42, is_hot: false)
+    book = repo.create_book(title: 'Book', isbn: '1', purchase_price: 42, is_hot: false)
 
-    post purchases_url, params: { user_id: alice.id, product_id: alice_book[:id] }
+    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
 
-    repo.update_book(item_id: alice_book[:id], title: 'New book 1')
+    repo.update_book(item_id: book[:id], title: 'New book')
 
-    get purchases_url, params: { user_id: alice.id, format: :json }
+    get purchases_url, params: { user_id: user.id, format: :json }
 
     purchased_books = response.parsed_body
     assert_equal 1, purchased_books.size
-    assert_equal 'Book 1', purchased_books[0]['title']
+    assert_equal 'Book', purchased_books[0]['title']
   end
 end
