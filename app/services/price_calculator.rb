@@ -1,4 +1,6 @@
 class PriceCalculator
+  class UnknownKindError < StandardError; end
+
   def initialize(kind)
     base_price_calculator = case kind
     when 'book'
@@ -10,6 +12,8 @@ class PriceCalculator
     when 'image' then ImagePriceCalculator.new
     when 'video' then VideoPriceCalculator.new
     end
+
+    raise UnknownKindError, "cannot price product #{kind.nil? ? "with no kind" : "of kind #{kind}"}" unless base_price_calculator
 
     @calculator = PremiumCalculator.new(base_price_calculator)
   end

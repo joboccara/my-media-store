@@ -42,6 +42,11 @@ class PriceSimulationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "missing parameters for pricing books: is_hot, purchase_price, title", error
   end
 
+  test 'refuses params without kind' do
+    error = get_pricing_error(title: 'Title of Book', isbn: '1')
+    assert_equal "cannot price product with no kind", error
+  end
+
   private
 
   def get_price(**params)

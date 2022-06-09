@@ -3,7 +3,12 @@ class PriceSimulationsController < ApplicationController
     product_attributes = {}
     params.each { |key, value| product_attributes[key.to_sym] = product_attribute(key, value) }
 
-    price_calculator = PriceCalculator.new(params[:kind])
+    begin
+      price_calculator = PriceCalculator.new(product_attributes[:kind])
+    rescue PriceCalculator::UnknownKindError => e
+      return render json: { error: e.message }, status: :bad_request
+    end
+
     is_valid, error_message = validate_input(price_calculator, product_attributes)
     if is_valid
       render json: { price: price_calculator.compute(product_attributes) }
