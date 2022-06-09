@@ -16,10 +16,12 @@ We also focus on backend code, so we only develop REST API, they will be used wi
 Tips:
 - if you want/need to change models, you can update the migrations, it will be quicker/easier ;)
 
-### Initial state
+## Initial state
 
 You have a `products_controller` allowing to list all the products by kind.
 Users can browse them and download them. Their downloaded list is available in the `downloads_controller`.
 
 Now the situation is clear, have a look to [instructions/iteration1.md](instructions/iteration1.md).
-Please do not look at instructions ahead of time, you will spoil you and ruin the training ^^
+We provide minimal tests for each iteration to guide you (`iteration_x_test.rb`), but you can write more if you want/need.
+
+**Please do not look at instructions/tests ahead of time, you will spoil you and ruin the training ^^**
