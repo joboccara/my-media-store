@@ -4,7 +4,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   repo = ProductRepository.new
 
   test 'gets a book with its details' do
-    book = repo.create_book(title: 'Item 1', isbn: '1', purchase_price: 42, is_hot: false)
+    book = repo.create_book(title: 'Item 1', isbn: '1', purchase_price: 42, is_hot: true)
 
     get product_url(book[:id])
 
@@ -12,6 +12,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Item 1', res['title']
     assert_equal 'book', res['kind']
     assert_equal 42, res['purchase_price']
+    assert_equal true, res['is_hot']
     assert_nil res['width']
     assert_nil res['duration']
   end
@@ -24,7 +25,6 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     res = response.parsed_body
     assert_equal 'Item 2', res['title']
     assert_equal 'image', res['kind']
-    assert_nil res['page_count']
     assert_equal 800, res['width']
     assert_nil res['duration']
   end
@@ -44,7 +44,6 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
       assert_equal 'Item 2', res['title']
       assert_equal 'image', res['kind']
       assert_equal 800, res['width']
-      assert_nil res['duration']
     ensure
       ENV.delete('IMAGES_FROM_EXTERNAL_SERVICE')
     end
@@ -76,7 +75,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     books = products_by_kind['books']
     assert_equal 'Item 1', books[0]['title']
     assert_equal 42, books[0]['purchase_price']
-    
+
     images = products_by_kind['images']
     assert_equal 1, images.size
     assert_equal 'Item 2', images[0]['title']
