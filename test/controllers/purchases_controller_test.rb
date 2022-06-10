@@ -62,7 +62,6 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
     get purchases_url, params: { user_id: user.id, format: :json }
     purchased_book = response.parsed_body[0]
     assert_equal 'Title of book', purchased_book['title']
-    assert_equal book[:id], purchased_book['item_id']
     assert_equal 15, purchased_book['price']
   end
 
@@ -77,8 +76,22 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
 
     get purchases_url, params: { user_id: user.id, format: :json }
 
-    purchased_books = response.parsed_body
-    assert_equal 1, purchased_books.size
-    assert_equal 'Book', purchased_books[0]['title']
+    purchased_book = response.parsed_body[0]
+    assert_equal 'Book', purchased_book['title']
+  end
+
+  test 'the price in the invoice does not change' do
+    user = User.create(first_name: 'Alice')
+    repo = ProductRepository.new
+    book = repo.create_book(title: 'Book', isbn: '1', purchase_price: 12, is_hot: false)
+
+    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
+
+    repo.update_book(item_id: book[:id], purchase_price: 24)
+
+    get purchases_url, params: { user_id: user.id, format: :json }
+
+    purchased_book = response.parsed_body[0]
+    assert_equal 15, purchased_book['price']
   end
 end
