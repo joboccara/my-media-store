@@ -3,7 +3,7 @@ require "test_helper"
 class Iteration2Test < ActionDispatch::IntegrationTest
   test 'items should have additional details' do
     skip 'unskip at iteration 2'
-    create_book(title: 'My book', isbn: '123', purchase_price: 12, is_hot: false)
+    create_book(title: 'My book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
     create_image(title: 'My image', width: 800, height: 600, source: 'Getty', format: 'jpg')
     create_video(title: 'My video', duration: 120, quality: 'FullHD')
 
@@ -13,10 +13,11 @@ class Iteration2Test < ActionDispatch::IntegrationTest
     book = products_by_kind['books'][0]
     assert_equal 'book', book['kind']
     assert_equal 'My book', book['title']
-    assert_equal '123', book['isbn']
+    assert_equal '9781603095099', book['isbn']
     assert_equal nil, book['purchase_price']
     assert_equal false, book['is_hot']
     assert_equal nil, book['created_at']
+
     image = products_by_kind['images'][0]
     assert_equal 'image', image['kind']
     assert_equal 'My image', image['title']
@@ -25,6 +26,7 @@ class Iteration2Test < ActionDispatch::IntegrationTest
     assert_equal 'Getty', image['source']
     assert_equal 'jpg', image['format']
     assert_equal nil, image['created_at']
+    
     video = products_by_kind['videos'][0]
     assert_equal 'video', video['kind']
     assert_equal 'My video', video['title']

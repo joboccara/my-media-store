@@ -7,13 +7,14 @@ The goal of the training will be to extend it.
 The challenge will be to do it in a way that supports well future evolutions.
 
 In order to facilitate the code and focus more on architecture decisions than HTTP API design, some tests are provided to clarify the API.
-We also focus on backend code, so we only develop REST API, they will be used with tests.
+We focus on backend code, so we only develop REST API, whcih is used with tests.
 
 ## Getting started
 
 - run `bundle install`
 
 Tips:
+
 - if you want/need to change models, you can update the migrations, it will be quicker/easier ;)
 
 ## Initial state
@@ -24,4 +25,4 @@ Users can browse them and download them. Their downloaded list is available in t
 Now the situation is clear, have a look to [instructions/iteration1.md](instructions/iteration1.md).
 We provide minimal tests for each iteration to guide you (`iteration_x_test.rb`), but you can write more if you want/need.
 
-**Please do not look at instructions/tests ahead of time, you will spoil you and ruin the training ^^**
+**Please do not look at instructions/tests ahead of time, that would spoil you and ruin the training ^^**

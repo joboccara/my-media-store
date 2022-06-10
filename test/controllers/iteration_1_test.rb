@@ -33,7 +33,7 @@ class Iteration1Test < ActionDispatch::IntegrationTest
   end
   test 'premium images are 5% more expensive' do
     skip 'unskip at iteration 1'
-    image = Item.create!(kind: 'image', title: 'Image premium 1', content: 'content')
+    image = Item.create!(kind: 'image', title: 'Premium image 1', content: 'content')
     assert_price_equal 7.35, get_product_price(image.id)
   end
 
@@ -52,7 +52,7 @@ class Iteration1Test < ActionDispatch::IntegrationTest
   test 'premium video are 5% more expensive during the day' do
     skip 'unskip at iteration 1'
     Timecop.travel(Time.now.change(hour: 10))
-    video = Item.create!(kind: 'video', title: 'Video premium 1', content: 'content')
+    video = Item.create!(kind: 'video', title: 'Video 1 PREMIUM', content: 'content')
     assert_price_equal 15.75, get_product_price(video.id)
   end
   test 'premium video are 5% more expensive during the night' do
