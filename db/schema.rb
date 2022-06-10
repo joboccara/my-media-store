@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_10_130727) do
+  create_table "book_details", force: :cascade do |t|
+    t.string "isbn"
+    t.boolean "is_hot"
+    t.float "purchase_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "item_id"
+    t.index ["item_id"], name: "index_book_details_on_item_id"
+  end
+
   create_table "downloads", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "item_id", null: false
@@ -18,6 +28,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_downloads_on_item_id"
     t.index ["user_id"], name: "index_downloads_on_user_id"
+  end
+
+  create_table "image_details", force: :cascade do |t|
+    t.integer "width"
+    t.integer "height"
+    t.string "source"
+    t.string "format"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "item_id"
+    t.index ["item_id"], name: "index_image_details_on_item_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -34,6 +55,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "video_details", force: :cascade do |t|
+    t.integer "duration"
+    t.string "quality"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "item_id"
+    t.index ["item_id"], name: "index_video_details_on_item_id"
+  end
+
+  add_foreign_key "book_details", "items"
   add_foreign_key "downloads", "items"
   add_foreign_key "downloads", "users"
+  add_foreign_key "image_details", "items"
+  add_foreign_key "video_details", "items"
 end
