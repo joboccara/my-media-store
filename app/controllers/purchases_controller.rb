@@ -1,6 +1,13 @@
 class PurchasesController < ApplicationController
   def index
-    render json: Invoice.where(user_id: params[:user_id])
+    products = ProductRepository.new
+    invoices = Invoice.where(user_id: params[:user_id])
+    payload = invoices.map do |invoice|
+      product = products.get_product(invoice.item_id)
+      price = PriceCalculator.new(product[:kind]).compute(product)
+      { title: invoice.title, item_id: invoice.item_id, price: price }
+    end
+    render json: payload
   end
 
   def create

@@ -53,6 +53,19 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
     assert_equal book[:id], purchased_book['item_id']
   end
 
+  test 'purchases contain the price of the product purchased' do
+    user = User.create(first_name: 'Alice')
+    book = repo.create_book(title: 'Title of book', isbn: '1', purchase_price: 12, is_hot: false)
+
+    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
+
+    get purchases_url, params: { user_id: user.id, format: :json }
+    purchased_book = response.parsed_body[0]
+    assert_equal 'Title of book', purchased_book['title']
+    assert_equal book[:id], purchased_book['item_id']
+    assert_equal 15, purchased_book['price']
+  end
+
   test 'the title in the invoice does not change' do
     user = User.create(first_name: 'Alice')
     repo = ProductRepository.new
