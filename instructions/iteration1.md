@@ -10,4 +10,4 @@ Here are the pricing options we want to use:
 - videos: the price is 15 during the day (5AM - 10PM) and 9 otherwise
 - all: if the title of the item contains "premium" with any capitalization, increase the price by 5%
 
-Unskip tests from `iteration_1_test` and fix what it's needed.
+Unskip tests from `iteration_1_test.rb` and fix what it's needed.

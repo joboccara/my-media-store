@@ -42,7 +42,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
   test 'checks the ISBN list to price books' do
     skip 'unskip at iteration 3'
     begin
-      CSV.open(Rails.root.join('isbn_list.csv'), 'w') do |csv|
+      CSV.open(Rails.root.join('isbn_prices.csv'), 'w') do |csv|
         csv << ['ISBN', 'price']
         csv << ['9781603095136', '14.99']
         csv << ['9781603095099', '19.99']
@@ -56,7 +56,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
       Timecop.travel(Time.new(2022, 1, 3)) # Monday
       assert_price_equal 19.99, get_product_price(book[:id])
     ensure
-      File.delete(Rails.root.join('isbn_list.csv'))
+      File.delete(Rails.root.join('isbn_prices.csv'))
     end
   end
 
