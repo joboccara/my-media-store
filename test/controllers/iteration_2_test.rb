@@ -26,7 +26,7 @@ class Iteration2Test < ActionDispatch::IntegrationTest
     assert_equal 'Getty', image['source']
     assert_equal 'jpg', image['format']
     assert_nil image['created_at']
-    
+
     video = products_by_kind['videos'][0]
     assert_equal 'video', video['kind']
     assert_equal 'My video', video['title']
