@@ -1,6 +1,5 @@
 require "test_helper"
 
-# from https://gist.github.com/joboccara/f319bd1c2c973390036bf8494e55820f
 class Iteration3Test < ActionDispatch::IntegrationTest
   teardown do
     Timecop.return
@@ -41,7 +40,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
         csv << ['ISBN', 'price']
         csv << ['9781603095136', '14.99']
         csv << ['9781603095099', '19.99']
-        csv << ['9781603095051', '19.99']
+        csv << ['9781603095051', '23.99']
       end
 
       book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
@@ -54,7 +53,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
       Timecop.travel(Time.new(2022, 1, 3)) # Monday
       assert_price_equal 19.99, get_product_price(book[:id])
     ensure
-      File.delete(Rails.root.join('isbn_prices.csv'))
+      File.delete(Rails.root.join('app/assets/config/isbn_prices.csv'))
     end
   end
 

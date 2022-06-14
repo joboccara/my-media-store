@@ -14,9 +14,9 @@ class Iteration2Test < ActionDispatch::IntegrationTest
     assert_equal 'book', book['kind']
     assert_equal 'My book', book['title']
     assert_equal '9781603095099', book['isbn']
-    assert_equal nil, book['purchase_price']
+    assert_nil book['purchase_price']
     assert_equal false, book['is_hot']
-    assert_equal nil, book['created_at']
+    assert_nil book['created_at']
 
     image = products_by_kind['images'][0]
     assert_equal 'image', image['kind']
@@ -25,14 +25,14 @@ class Iteration2Test < ActionDispatch::IntegrationTest
     assert_equal 600, image['height']
     assert_equal 'Getty', image['source']
     assert_equal 'jpg', image['format']
-    assert_equal nil, image['created_at']
+    assert_nil image['created_at']
     
     video = products_by_kind['videos'][0]
     assert_equal 'video', video['kind']
     assert_equal 'My video', video['title']
     assert_equal 120, video['duration']
     assert_equal 'FullHD', video['quality']
-    assert_equal nil, video['created_at']
+    assert_nil video['created_at']
   end
 
   private

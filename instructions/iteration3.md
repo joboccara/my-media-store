@@ -5,7 +5,7 @@ As we have new attributes, let's refine our pricing model:
 - books:
   - compute price with +25% from `purchase_price` instead of the environment variable
   - if the book is_hot, its price should be 9.99 during weekdays
-  - if book is present in `isbn_prices.csv`, get it from there instead
+  - if book is present in `app/assets/config/isbn_prices.csv`, get it from there instead
 - images
   - if source is 'NationalGeographic', the price is 0.02/9600px
   - if source is 'Getty'
