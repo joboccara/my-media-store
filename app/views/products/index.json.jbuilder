@@ -1,7 +1,5 @@
-@products.group_by { |product| product[:kind] + 's' }.each do |kind, products|
-  json.set!(kind) do
-    json.array! products do |product|
-      json.partial! '/products/product', product: product
-    end
+@products.group_by { |product| product[:kind] }.each do |kind, products|
+  json.set!(kind + 's') do
+    json.array! products, partial: '/products/product', as: :product
   end
 end
