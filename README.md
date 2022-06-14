@@ -19,7 +19,7 @@ We focus on backend code, so we only develop a REST API, which is used with test
 
 Tips:
 
-- if you want/need to change models, you can update the migrations and reset the db, it will be quicker/easier ;)
+- if you want/need to change models, you can update the migrations and reset the db, it will be quicker/easier ;) (`bundle exec rails db:drop db:create db:migrate`)
 
 ## Initial state
 

@@ -61,12 +61,12 @@ class Iteration6Test < ActionDispatch::IntegrationTest
     book = create_book(title: 'Book', isbn: '1', purchase_price: 42, is_hot: false)
 
     post purchases_url, params: { user_id: user.id, product_id: book[:id] }
-    update_book(item_id: book[:id], title: 'New book', purchase_price: 24)
+    update_book(item: book, title: 'New book', purchase_price: 24)
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
     assert_equal 'Book', purchased_book['title']
-    assert_equal 15, purchased_book['price']
+    assert_equal 52.5, purchased_book['price']
   end
 
   private
@@ -79,7 +79,8 @@ class Iteration6Test < ActionDispatch::IntegrationTest
     Item.create!(kind: 'book', title: title, content: 'content')
   end
 
-  def update_book(item_id:, title: nil, purchase_price: nil)
-
+  def update_book(item:, title: nil, purchase_price: nil)
+    item.title = title unless title.nil?
+    item.save!
   end
 end
