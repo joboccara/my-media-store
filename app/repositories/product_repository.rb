@@ -31,6 +31,11 @@ class ProductRepository
     item_dto(item).merge(video_details_dto(video_details))
   end
 
+  def update_book(id:, title:, content:, isbn:, purchase_price:, is_hot:)
+    Item.where(id: id).update_all(title: title, content: content)
+    BookDetail.where(item_id: id).update_all(isbn: isbn, purchase_price: purchase_price, is_hot: is_hot)
+  end
+
   private
 
   def build_products(items)
