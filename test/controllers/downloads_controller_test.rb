@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DownloadsControllerTest < ActionDispatch::IntegrationTest
   test 'a downloaded item appears in the library' do
-    user = User.create(first_name: 'Bob')
+    user = User.create!(first_name: 'Bob')
     book_to_download_1 = Item.create!(kind: 'book', title: 'Title of Book1', content: 'Contents of Book1')
     book_to_download_2 = Item.create!(kind: 'book', title: 'Title of Book2', content: 'Contents of Book2')
     book_not_to_download = Item.create!(kind: 'book', title: 'Title of Book3', content: 'Contents of Book3')
@@ -21,7 +21,7 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'a user can download an item only once' do
-    user = User.create(first_name: 'Bob')
+    user = User.create!(first_name: 'Bob')
     book_to_download = Item.create!(kind: 'book', title: 'Title of Book', content: 'Contents of Book')
 
     post downloads_url, params: { user_id: user.id, item_id: book_to_download.id }

@@ -19,6 +19,7 @@ As we have new attributes, let's refine our pricing model:
   - 'FullHD' videos are priced at 3 per started minute
   - 'SD' videos are priced at 1 per started minute
   - time over 10 minutes is not accounted for 'SD' videos
+  - for other formats, price is 15
   - video price is reduced by 40% during the night (22 PM - 5 AM)
 - still have the +5% price increase for all items containing 'premium' in the title (from iteration 1)
 

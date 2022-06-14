@@ -36,7 +36,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
   test 'checks the ISBN list to price books' do
     skip 'unskip at iteration 3'
     begin
-      CSV.open(Rails.root.join('isbn_prices.csv'), 'w') do |csv|
+      CSV.open(Rails.root.join('app/assets/config/isbn_prices.csv'), 'wb') do |csv|
         csv << ['ISBN', 'price']
         csv << ['9781603095136', '14.99']
         csv << ['9781603095099', '19.99']
