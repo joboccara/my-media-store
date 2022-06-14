@@ -32,7 +32,7 @@ class Iteration6Test < ActionDispatch::IntegrationTest
     downloaded_books = response.parsed_body['books']
     assert_nil downloaded_books
 
-    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
+    post purchases_url, params: { user_id: user.id, product_id: book.id }
 
     # One download after purchase
     get downloads_url, params: { user_id: user.id }
@@ -46,12 +46,12 @@ class Iteration6Test < ActionDispatch::IntegrationTest
     user = create_user(first_name: 'Alice')
     book = create_book(title: 'Title of book', isbn: '1', purchase_price: 12, is_hot: false)
 
-    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
+    post purchases_url, params: { user_id: user.id, product_id: book.id }
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
     assert_equal 'Title of book', purchased_book['title']
-    assert_equal book[:id], purchased_book['item_id']
+    assert_equal book.id, purchased_book['item_id']
     assert_equal 15, purchased_book['price']
   end
 
@@ -60,7 +60,7 @@ class Iteration6Test < ActionDispatch::IntegrationTest
     user = create_user(first_name: 'Alice')
     book = create_book(title: 'Book', isbn: '1', purchase_price: 42, is_hot: false)
 
-    post purchases_url, params: { user_id: user.id, product_id: book[:id] }
+    post purchases_url, params: { user_id: user.id, product_id: book.id }
     update_book(item: book, title: 'New book', purchase_price: 24)
 
     get purchases_url, params: { user_id: user.id }
