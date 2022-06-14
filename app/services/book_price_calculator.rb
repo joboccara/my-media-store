@@ -14,7 +14,7 @@ class BookPriceCalculator
   end
 
   def expected_attributes
-    [:isbn, :purchase_price, :is_hot]
+    [:isbn, :purchase_price] # :is_hot attribute is optional
   end
 
   def parse_attribute(key, value)

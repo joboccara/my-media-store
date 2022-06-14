@@ -43,7 +43,7 @@ class ProductRepository
       when 'book' then book_details_dto(book_details.find(&belongs_to_item))
       when 'image' then image_details_dto(image_details.find(&belongs_to_item))
       when 'video' then video_details_dto(video_details.find(&belongs_to_item))
-      else raise "Unknown item kind #{item.kind}"
+      else raise "Unknown item kind #{item.kind.inspect}"
       end
       item_dto(item).merge(details_dto)
     end

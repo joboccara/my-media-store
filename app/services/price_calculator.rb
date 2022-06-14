@@ -14,10 +14,8 @@ class PriceCalculator
       end
     when 'image' then ImagePriceCalculator.new
     when 'video' then VideoPriceCalculator.new
-    else raise "Unknown item kind #{item.kind}"
+    else raise UnknownKindError, "cannot price product #{kind.nil? ? "with no kind" : "of kind #{kind}"}"
     end
-
-    raise UnknownKindError, "cannot price product #{kind.nil? ? "with no kind" : "of kind #{kind}"}" unless base_price_calculator
 
     @calculator = PremiumCalculator.new(base_price_calculator)
   end
