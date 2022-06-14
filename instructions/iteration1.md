@@ -1,9 +1,9 @@
 # Iteration 1: compute price
 
 Now we want to make money! Let's add some price to our items.
-Product price is available as a standalone endpoint, returning only the price for the required product.
+Product price is available as a standalone endpoint (`product_prices_controller`), returning only the price for the required product.
 
-Here are the pricing options we want to use:
+Here are the pricing rules we want to use:
 
 - books: we have a `BOOK_PURCHASE_PRICE` environment variable, just add +25% to compute the price
 - images: the price is always 7
