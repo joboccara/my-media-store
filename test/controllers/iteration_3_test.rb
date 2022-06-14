@@ -28,11 +28,6 @@ class Iteration3Test < ActionDispatch::IntegrationTest
     assert_price_equal 9.99, get_product_price(book[:id])
     Timecop.travel(Time.new(2022, 1, 7)) # Friday
     assert_price_equal 9.99, get_product_price(book[:id])
-  end
-
-  test 'does not take hot books into account during weekends' do
-    skip 'unskip at iteration 3'
-    book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 16, is_hot: true)
     Timecop.travel(Time.new(2022, 1, 8)) # Saturday
     assert_price_equal 20, get_product_price(book[:id])
     Timecop.travel(Time.new(2022, 1, 9)) # Sunday
@@ -42,7 +37,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
   test 'checks the ISBN list to price books' do
     skip 'unskip at iteration 3'
     begin
-      CSV.open(Rails.root.join('isbn_list.csv'), 'w') do |csv|
+      CSV.open(Rails.root.join('isbn_prices.csv'), 'w') do |csv|
         csv << ['ISBN', 'price']
         csv << ['9781603095136', '14.99']
         csv << ['9781603095099', '19.99']
@@ -52,11 +47,14 @@ class Iteration3Test < ActionDispatch::IntegrationTest
       book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
       assert_price_equal 19.99, get_product_price(book[:id])
 
+      book = create_book(title: 'Premium book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
+      assert_price_equal 20.99, get_product_price(book[:id])
+
       book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 12, is_hot: true)
       Timecop.travel(Time.new(2022, 1, 3)) # Monday
       assert_price_equal 19.99, get_product_price(book[:id])
     ensure
-      File.delete(Rails.root.join('isbn_list.csv'))
+      File.delete(Rails.root.join('isbn_prices.csv'))
     end
   end
 
@@ -132,7 +130,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
   test 'prices SD videos longer than 10 minutes at 10' do
     skip 'unskip at iteration 3'
     Timecop.travel Time.new(2022, 1, 1) + 6.hours
-    video = create_video(title: 'Title of Video', duration: 10 * 60, quality: 'SD')
+    video = create_video(title: 'Title of Video', duration: 12 * 60, quality: 'SD')
     assert_price_equal 10, get_product_price(video[:id])
   end
 

@@ -1,16 +1,16 @@
-# Iteration 3: extend pricing strategies with new attributes
+# Iteration 3: extend pricing strategies using new attributes
 
 As we have new attributes, let's refine our pricing model:
 
 - books:
-  - compute price with +25% from `purchase_price` instead of environment variable
+  - compute price with +25% from `purchase_price` instead of the environment variable
   - if the book is_hot, its price should be 9.99 during weekdays
-  - if book is present in `/app/assets/isbn_prices.csv`, return price from there instead
+  - if book is present in `isbn_prices.csv`, get it from there instead
 - images
   - if source is 'NationalGeographic', the price is 0.02/9600px
   - if source is 'Getty'
-    - price is 1 when less px than 1280x720
-    - price is 3 when less px than 1920x1080
+    - price is 1 when same or fewer pixels than 1280x720
+    - price is 3 when same or fewer pixels than 1920x1080
     - price is 5 otherwise
     - expect if format is 'raw', price is 10 whatever the size
   - otherwise, price is 7
@@ -20,6 +20,6 @@ As we have new attributes, let's refine our pricing model:
   - 'SD' videos are priced at 1 per started minute
   - time over 10 minutes is not accounted for 'SD' videos
   - video price is reduced by 40% during the night (22 PM - 5 AM)
-- still have the +5% price increase for for all items containing 'premium' in the title
+- still have the +5% price increase for all items containing 'premium' in the title (from iteration 1)
 
-Unskip tests from `iteration_3_test` and fix what it's needed.
+Unskip tests from `iteration_3_test.rb` and fix what it's needed.
