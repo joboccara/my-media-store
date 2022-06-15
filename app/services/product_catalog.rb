@@ -12,7 +12,7 @@ class ProductCatalog
   end
 
   # @param isbn [String]
-  # @return [Float, Nil]
+  # @return [Float, nil]
   def get_price(isbn)
     @prices_by_isbn[isbn]
   end
