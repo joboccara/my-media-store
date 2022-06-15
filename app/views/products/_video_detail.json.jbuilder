@@ -1,2 +1,2 @@
-json.duration details[:duration]
-json.quality details[:quality]
+json.duration details.duration
+json.quality details.quality

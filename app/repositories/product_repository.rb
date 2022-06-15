@@ -62,6 +62,15 @@ class ProductRepository
     build_video_dto(product, details)
   end
 
+  # @param id [Integer]
+  # @param title [String]
+  # @param purchase_price [Float]
+  # @return [nil]
+  def update_book(id:, title:, purchase_price:)
+    Product.update(id, title: title)
+    BookDetail.where(product: id).update(purchase_price: purchase_price)
+  end
+
   private
 
   # @param products [Array<Product>]

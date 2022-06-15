@@ -7,7 +7,9 @@ class DownloadsController < ApplicationController
 
   def create
     head :bad_request if Download.where(user: params[:user_id], product: params[:product_id]).any?
+    user_id = params[:user_id].to_i
+    product_id = params[:product_id].to_i
 
-    Download.create!(user_id: params[:user_id], product_id: params[:product_id])
+    DownloadRepository.new.create(user_id, product_id)
   end
 end

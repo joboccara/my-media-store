@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_01_090006) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_01_090007) do
   create_table "book_details", force: :cascade do |t|
     t.integer "product_id", null: false
     t.string "isbn"
@@ -41,6 +41,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090006) do
     t.index ["product_id"], name: "index_image_details_on_product_id"
   end
 
+  create_table "invoices", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "product_id", null: false
+    t.string "title"
+    t.float "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_invoices_on_product_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "kind"
     t.string "title"
@@ -68,5 +79,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090006) do
   add_foreign_key "downloads", "products"
   add_foreign_key "downloads", "users"
   add_foreign_key "image_details", "products"
+  add_foreign_key "invoices", "products"
+  add_foreign_key "invoices", "users"
   add_foreign_key "video_details", "products"
 end
