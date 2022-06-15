@@ -2,11 +2,11 @@
 class ProductPricesController < ApplicationController
   def show
     id = params[:id].to_i
-    book_purchase_price = ENV['BOOK_PURCHASE_PRICE'].to_f
     now = Time.now
 
     product = ProductRepository.new.get_product(id)
-    price = ProductPricer.new(book_purchase_price, now).compute(product)
+    catalog = ProductCatalog.new(Rails.configuration.product_catalog_path)
+    price = ProductPricer.new(catalog, now).compute(product)
 
     render json: price
   end
