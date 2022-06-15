@@ -1,6 +1,7 @@
-require "test_helper"
+require "test_helper_training"
+require "csv"
 
-class Iteration3Test < ActionDispatch::IntegrationTest
+class Iteration3Test < TestHelperTraining
   teardown do
     Timecop.return
   end
@@ -16,7 +17,7 @@ class Iteration3Test < ActionDispatch::IntegrationTest
 
   test 'prices hot books at 9.99 during weekdays' do
     skip 'unskip at iteration 3'
-    book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 16, is_hot: true)
+    book = create_book(title: 'Title of Book', isbn: '0321721330', purchase_price: 16, is_hot: true)
     Timecop.travel(Time.new(2022, 1, 3)) # Monday
     assert_price_equal 9.99, get_product_price(book.id)
     Timecop.travel(Time.new(2022, 1, 4)) # Tuesday
@@ -166,18 +167,6 @@ class Iteration3Test < ActionDispatch::IntegrationTest
   end
 
   private
-
-  def create_book(title:, isbn:, purchase_price:, is_hot:)
-    Item.create!(kind: 'book', title: title, content: 'content')
-  end
-
-  def create_image(title:, width:, height:, source:, format:)
-    Item.create!(kind: 'image', title: title, content: 'content')
-  end
-
-  def create_video(title:, duration:, quality:)
-    Item.create!(kind: 'video', title: title, content: 'content')
-  end
 
   def get_product_price(id)
     get product_price_url(id)

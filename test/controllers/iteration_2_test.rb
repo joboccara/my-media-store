@@ -1,6 +1,6 @@
-require "test_helper"
+require "test_helper_training"
 
-class Iteration2Test < ActionDispatch::IntegrationTest
+class Iteration2Test < TestHelperTraining
   test 'items should have additional details' do
     skip 'unskip at iteration 2'
     create_book(title: 'My book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
@@ -33,19 +33,5 @@ class Iteration2Test < ActionDispatch::IntegrationTest
     assert_equal 120, video['duration']
     assert_equal 'FullHD', video['quality']
     assert_nil video['created_at']
-  end
-
-  private
-
-  def create_book(title:, isbn:, purchase_price:, is_hot:)
-    Item.create!(kind: 'book', title: title, content: 'content')
-  end
-
-  def create_image(title:, width:, height:, source:, format:)
-    Item.create!(kind: 'image', title: title, content: 'content')
-  end
-
-  def create_video(title:, duration:, quality:)
-    Item.create!(kind: 'video', title: title, content: 'content')
   end
 end

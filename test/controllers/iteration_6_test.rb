@@ -1,6 +1,6 @@
-require "test_helper"
+require "test_helper_training"
 
-class Iteration6Test < ActionDispatch::IntegrationTest
+class Iteration6Test < TestHelperTraining
   test 'users can purchase products' do
     skip 'unskip at iteration 6'
     alice = create_user(first_name: 'Alice')
@@ -73,10 +73,6 @@ class Iteration6Test < ActionDispatch::IntegrationTest
 
   def create_user(first_name:)
     User.create!(first_name: first_name)
-  end
-
-  def create_book(title:, isbn:, purchase_price:, is_hot:)
-    Item.create!(kind: 'book', title: title, content: 'content')
   end
 
   def update_book(item:, title: nil, purchase_price: nil)

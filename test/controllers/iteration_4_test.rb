@@ -1,6 +1,6 @@
-require "test_helper"
+require "test_helper_training"
 
-class Iteration4Test < ActionDispatch::IntegrationTest
+class Iteration4Test < TestHelperTraining
   test 'price a book' do
     skip 'unskip at iteration 4'
     assert_price_equal 15, get_price(kind: 'book', isbn: '1', purchase_price: 12)

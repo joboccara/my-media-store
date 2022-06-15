@@ -1,6 +1,6 @@
-require "test_helper"
+require "test_helper_training"
 
-class Iteration1Test < ActionDispatch::IntegrationTest
+class Iteration1Test < TestHelperTraining
   teardown do
     Timecop.return
   end
