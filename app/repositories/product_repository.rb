@@ -74,9 +74,21 @@ class ProductRepository
     products.map { |product| build_product_dto(product, book_details, image_details, video_details) }
   end
 
-  BookDto = Struct.new(:id, :kind, :title, :content, :isbn, :purchase_price, :is_hot)
-  ImageDto = Struct.new(:id, :kind, :title, :content, :width, :height, :source, :format)
-  VideoDto = Struct.new(:id, :kind, :title, :content, :duration, :quality)
+  BookDto = Struct.new(:id, :kind, :title, :content, :isbn, :purchase_price, :is_hot) do
+    def fold(book:, image:, video:)
+      book.respond_to?(:call) ? book.call(self) : book
+    end
+  end
+  ImageDto = Struct.new(:id, :kind, :title, :content, :width, :height, :source, :format) do
+    def fold(book:, image:, video:)
+      image.respond_to?(:call) ? image.call(self) : image
+    end
+  end
+  VideoDto = Struct.new(:id, :kind, :title, :content, :duration, :quality) do
+    def fold(book:, image:, video:)
+      video.respond_to?(:call) ? video.call(self) : video
+    end
+  end
 
   # @param array [Array<T>]
   # @param attr [Symbol]
