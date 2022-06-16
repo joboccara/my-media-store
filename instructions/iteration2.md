@@ -10,4 +10,4 @@ Let's add them:
 We want to retrieve them from the `products_controller#index` endpoint.
 And oh, `created_at` and `updated_at` fields should not be exposed anymore, and of course, not the `purchase_price` also ^^.
 
-Unskip tests from `iteration_2_test.rb` and fix what it's needed.
+Unskip tests from `iteration_2_test.rb` and fix what is needed.

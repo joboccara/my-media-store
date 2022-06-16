@@ -23,4 +23,4 @@ As we have new attributes, let's refine our pricing model:
   - video price is reduced by 40% during the night (22 PM - 5 AM)
 - still have the +5% price increase for all items containing 'premium' in the title (from iteration 1)
 
-Unskip tests from `iteration_3_test.rb` and fix what it's needed.
+Unskip tests from `iteration_3_test.rb` and fix what is needed.
