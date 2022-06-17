@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class Pricer
   def price(product)
-    price = pricing_strategy(product.kind).call
+    price = pricing_strategy(product.kind).call(product)
     apply_premium_pricing(price, product.kind, product.title)
   end
 
@@ -10,11 +10,11 @@ class Pricer
   def pricing_strategy(product_kind)
     case product_kind
     when 'Book'
-      BookPricer.new(ENV['BOOK_PURCHASE_PRICE'].to_f)
+      BookPricer.new(ENV['BOOK_PURCHASE_PRICE'].to_f, Time.now)
     when 'Image'
       ImagePricer.new
     when 'Video'
-      VideoPricer.new(Time.zone.now)
+      VideoPricer.new(Time.now)
     else
       raise NotImplementedError, 'unknown product kind'
     end

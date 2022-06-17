@@ -5,4 +5,8 @@ class Product < ApplicationRecord
 
   KINDS = %w(Book Image Video)
   validates :kind, presence: true, inclusion: { in: KINDS }
+
+  def premium?
+    title.downcase.include?('premium')
+  end
 end
