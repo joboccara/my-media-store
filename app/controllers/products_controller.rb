@@ -2,15 +2,13 @@ require 'date'
 
 class ProductsController < ApplicationController
   def index
-    pricer = Pricer.new
-    items =
+    @products =
       if params[:month].present?
-        month_number = Date::MONTHNAMES.index(params[:month].capitalize)
-        month_number_string = "%02d" % month_number
-        Product.where("strftime('%m', created_at) = ?", month_number_string)
+        month_number = Date::MONTHNAMES.index(params[:month].capitalize) || 1
+        from = Date.new(Time.now.year, month_number)
+        Products::Catalog.new.for_period(from: from, to: from.at_end_of_month)
       else
-        Product.all
+        Products::Catalog.new.all
       end
-    @products = items.map {|item| { product: item, kind: item.kind, price: pricer.price(item) } }
   end
 end

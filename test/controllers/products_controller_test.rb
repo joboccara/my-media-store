@@ -28,7 +28,9 @@ class ProductsControllerTest < TestHelperTraining
     create_book(title: 'The Lean Startup', content: 'Contents of Book', created_at: '2019-01-01')
     create_video(title: 'TDD as in Type-Driven Development', content: 'Contents of Video', created_at: '2019-02-01')
 
-    get '/products?month=february'
+    Timecop.travel '2019-06-21' do
+      get '/products?month=february'
+    end
     products_by_kind = response.parsed_body
 
     assert_equal ['videos'], products_by_kind.keys
