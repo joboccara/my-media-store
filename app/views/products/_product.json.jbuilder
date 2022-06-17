@@ -1,0 +1,1 @@
+json.partial! "#{product[:kind].downcase}", product: product[:product], price: product[:price]

@@ -11,6 +11,6 @@ class ProductsController < ApplicationController
       else
         Product.all
       end
-    @products = items.map {|item| item.attributes.to_h.merge(price: pricer.price(item)) }
+    @products = items.map {|item| { product: item, kind: item.kind, price: pricer.price(item) } }
   end
 end

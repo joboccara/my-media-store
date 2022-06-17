@@ -11,15 +11,15 @@ class ProductsControllerTest < TestHelperTraining
 
     books = products_by_kind['books']
     assert_equal 2, books.count
-    assert_equal 'book', books[0]['kind']
+    assert_equal 'Book', books[0]['kind']
     assert_equal 'Domain-Driven Design', books[0]['title']
     assert_equal 'Contents of Book1', books[0]['content']
-    assert_equal 'book', books[1]['kind']
+    assert_equal 'Book', books[1]['kind']
     assert_equal 'Turn the Ship Around', books[1]['title']
     assert_equal 'Contents of Book2', books[1]['content']
 
     videos = products_by_kind['videos']
-    assert_equal 'video', videos[0]['kind']
+    assert_equal 'Video', videos[0]['kind']
     assert_equal 'Tout ce que vous avez toujours voulus savoir sur la programmation fonctionnelle', videos[0]['title']
     assert_equal 'Contents of Video', videos[0]['content']
   end
@@ -33,7 +33,7 @@ class ProductsControllerTest < TestHelperTraining
 
     assert_equal ['videos'], products_by_kind.keys
     videos = products_by_kind['videos']
-    assert_equal 'video', videos[0]['kind']
+    assert_equal 'Video', videos[0]['kind']
     assert_equal 'TDD as in Type-Driven Development', videos[0]['title']
     assert_equal 'Contents of Video', videos[0]['content']
   end

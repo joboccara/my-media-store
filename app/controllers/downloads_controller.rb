@@ -1,7 +1,7 @@
 class DownloadsController < ApplicationController
   def index
     downloaded_products = Download.includes(:product).where(user: params[:user_id]).map(&:product)
-    downloaded_products_by_kind = downloaded_products.group_by { |product| product.kind + 's' }
+    downloaded_products_by_kind = downloaded_products.group_by { |product| product.kind.downcase + 's' }
     render json: downloaded_products_by_kind
   end
 
