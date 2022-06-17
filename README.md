@@ -23,8 +23,8 @@ Tips:
 
 ## Initial state
 
-You have a `products_controller` allowing to list all the products by kind.
-Users can browse them and download them. Their downloaded list is available in the `downloads_controller`.
+You have a `products_controller` allowing to list all the available products by kind.
+Users can browse them, add items to their library and download them. Their library is available in the `downloads_controller`.
 
 Now let's start and open [instructions/iteration1.md](instructions/iteration1.md) for the first iteration.
 We provide minimal tests for each iteration to guide you (see `iteration_x_test.rb`), but you can write more if you want/need.
