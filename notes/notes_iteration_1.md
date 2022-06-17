@@ -1,0 +1,15 @@
+
+- Without design achieved in ~20’
+- More design in 15' more minutes
+- Debrief questions
+    - this iteration can be achieved without any specific concept: do we want already to add concepts in our standards? 
+    - Can emerge:
+        - Separation of concerns:
+            - Where do you compute the price?
+            - How do you decide which price is applied?
+        - Hiding implementation details (not passing the entire product everywhere)
+        - Removing external dependencies 
+          - (Time and ENV variable) -> make them explicit by using the constructor
+          - Passing a product to the Pricer rather than having the Pricer calling the DB
+- Improvement: what about not having all product types using the premium rule to encourage composition of rules 
+  - eg. `'premium video are not more expensive during the night'`
