@@ -6,13 +6,12 @@ class ProductPricesController < ApplicationController
 
     product = ProductRepository.new.get_product(id)
     catalog = ProductCatalog.new(Rails.configuration.product_catalog_path)
-    PriceCalculator
-      .default(catalog)
-      .price(product, now)
-      .fold(
-        if_pending: proc { render json: { error: "cannot price product #{p[:kind].nil? ? 'with no kind' : "of kind #{p[:kind]}"}" }, status: :bad_request },
-        if_failure: proc { |err| render json: { error: err }, status: :bad_request },
-        if_success: proc { |price| render json: price }
-      )
+    calculator = PriceCalculator.default(catalog)
+
+    calculator.price(product.to_h, now).fold(
+      if_pending: proc { render json: { error: "cannot price product #{p[:kind].nil? ? 'with no kind' : "of kind #{p[:kind]}"}" }, status: :bad_request },
+      if_failure: proc { |err| render json: { error: err }, status: :bad_request },
+      if_success: proc { |price| render json: price }
+    )
   end
 end

@@ -3,23 +3,30 @@ class PriceCalculator
   # @return [PriceCalculator]
   def self.default(catalog)
     PriceCalculator.new([
-                          Pricers::BookPricer.new(catalog),
-                          Pricers::ImagePricer.new,
-                          Pricers::VideoPricer.new,
-                          Pricers::PremiumPricer.new(1.05)
+                          Pricing::Book.new(catalog),
+                          Pricing::Image.new,
+                          Pricing::Video.new,
+                          Pricing::Weekday.new(0.4),
+                          Pricing::Premium.new(0.05)
                         ])
   end
 
-  # @param pricers [Array<Pricer>]
+  # @param rules [Array<Pricing::Rule>]
   # @return [PriceCalculator]
-  def initialize(pricers)
-    @pricers = pricers
+  def initialize(rules)
+    @rules = rules
   end
 
   # @param params [Hash]
   # @param now [Time]
   # @return [Result<Float>]
   def price(params, now)
-    @pricers.inject(Result.pending) { |price, pricer| pricer.compute(price, params, now) }
+    @rules.reduce(Result.pending) do |price, rule|
+      if rule.apply?(params)
+        rule.parse(params).and_then { |p| rule.compute(price, p, now) }
+      else
+        price
+      end
+    end
   end
 end

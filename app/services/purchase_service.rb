@@ -17,7 +17,7 @@ class PurchaseService
   # @return [Result<nil>]
   def purchase(user_id, product_id, now)
     product = @product_repo.get_product(product_id)
-    @price_calculator.price(product, now).then do |price|
+    @price_calculator.price(product.to_h, now).then do |price|
       @download_repo.create(user_id, product.id)
       @invoice_repo.create(user_id, product, price)
     end
