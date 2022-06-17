@@ -56,7 +56,7 @@ class Iteration6Test < TestHelperTraining
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
     assert_equal 'Extreme Ownership', purchased_book['title']
-    assert_equal book.id, purchased_book['item_id']
+    assert_equal book.id, purchased_book['product_id']
     assert_equal 15, purchased_book['price']
   end
 
@@ -67,7 +67,7 @@ class Iteration6Test < TestHelperTraining
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
     assert_equal 200, response.status, response.body
-    update_book(item: book, title: 'Drive: The surprising truth about what motivates us', purchase_price: 24)
+    update_book(product: book, title: 'Drive: The surprising truth about what motivates us', purchase_price: 24)
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
@@ -81,8 +81,8 @@ class Iteration6Test < TestHelperTraining
     User.create!(first_name: first_name)
   end
 
-  def update_book(item:, title: nil, purchase_price: nil)
-    item.title = title unless title.nil?
-    item.save!
+  def update_book(product:, title: nil, purchase_price: nil)
+    product.title = title unless title.nil?
+    product.save!
   end
 end
