@@ -2,17 +2,14 @@ require "test_helper_training"
 
 class Iteration4Test < TestHelperTraining
   test 'price a book' do
-    skip 'unskip at iteration 4'
     assert_price_equal 15, get_price(kind: 'book', isbn: '9786612101090', purchase_price: 12)
   end
 
   test 'price an image' do
-    skip 'unskip at iteration 4'
     assert_price_equal 1, get_price(kind: 'image', width: 800, height: 600, source: 'NationalGeographic', format: 'jpg')
   end
 
   test 'price a video' do
-    skip 'unskip at iteration 4'
     begin
       Timecop.travel Time.new(2022, 1, 1) + 6.hours
       assert_price_equal 12, get_price(kind: 'video', duration: 150, quality: '4k')
@@ -22,7 +19,6 @@ class Iteration4Test < TestHelperTraining
   end
 
   test 'price a premium book' do
-    skip 'unskip at iteration 4'
     assert_price_equal 15.75, get_price(kind: 'book', title: 'Clean Ruby premium', isbn: '1484255453', purchase_price: 12)
   end
 

@@ -24,15 +24,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
     t.string "kind"
     t.string "title"
     t.text "content"
+
     t.string "isbn"
     t.float "purchase_price"
     t.boolean "is_hot"
+
     t.integer "width"
     t.integer "height"
     t.string "source"
     t.string "format"
+
     t.integer "duration"
     t.string "quality"
+
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

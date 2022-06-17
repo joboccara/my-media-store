@@ -22,7 +22,7 @@ class Pricer
 
   def apply_premium_pricing(price, product_kind, product_title)
     return price unless product_kind.in? %w[Book Video]
-    return price unless product_title.downcase.include? 'premium'
+    return price unless product_title&.downcase&.include? 'premium'
     price * 1.05
   end
 end

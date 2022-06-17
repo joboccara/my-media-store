@@ -7,6 +7,6 @@ class Product < ApplicationRecord
   validates :kind, presence: true, inclusion: { in: KINDS }
 
   def premium?
-    title.downcase.include?('premium')
+    title&.downcase&.include?('premium')
   end
 end
