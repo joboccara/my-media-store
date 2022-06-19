@@ -11,8 +11,11 @@ class Iteration6Test < TestHelperTraining
     book_3 = create_book(title: "It Doesn't Have to Be Crazy at Work", isbn: '0062874780', purchase_price: 42, is_hot: false)
 
     post purchases_url, params: { user_id: alice.id, product_id: book_1.id }
+    assert_equal 200, response.status, response.body
     post purchases_url, params: { user_id: alice.id, product_id: book_2.id }
+    assert_equal 200, response.status, response.body
     post purchases_url, params: { user_id: bob.id, product_id: book_3.id }
+    assert_equal 200, response.status, response.body
 
     get purchases_url, params: { user_id: alice.id }
 
@@ -33,6 +36,7 @@ class Iteration6Test < TestHelperTraining
     assert_nil downloaded_books
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
+    assert_equal 200, response.status, response.body
 
     # One download after purchase
     get downloads_url, params: { user_id: user.id }
@@ -47,6 +51,7 @@ class Iteration6Test < TestHelperTraining
     book = create_book(title: 'Extreme Ownership', isbn: '9783962670658', purchase_price: 12, is_hot: false)
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
+    assert_equal 200, response.status, response.body
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
@@ -61,6 +66,7 @@ class Iteration6Test < TestHelperTraining
     book = create_book(title: 'Drive', isbn: '9781101524275', purchase_price: 42, is_hot: false)
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
+    assert_equal 200, response.status, response.body
     update_book(item: book, title: 'Drive: The surprising truth about what motivates us', purchase_price: 24)
 
     get purchases_url, params: { user_id: user.id }

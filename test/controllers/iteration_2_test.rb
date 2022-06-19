@@ -3,7 +3,7 @@ require "test_helper_training"
 class Iteration2Test < TestHelperTraining
   test 'items should have additional details' do
     skip 'unskip at iteration 2'
-    create_book(title: 'My book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
+    create_book(title: 'Clean Code', isbn: '9780132350884', purchase_price: 12, is_hot: false)
     create_image(title: 'My image', width: 800, height: 600, source: 'Getty', format: 'jpg')
     create_video(title: 'My video', duration: 120, quality: 'FullHD')
 
@@ -12,8 +12,8 @@ class Iteration2Test < TestHelperTraining
 
     book = products_by_kind['books'][0]
     assert_equal 'book', book['kind']
-    assert_equal 'My book', book['title']
-    assert_equal '9781603095099', book['isbn']
+    assert_equal 'Clean Code', book['title']
+    assert_equal '9780132350884', book['isbn']
     assert_nil book['purchase_price']
     assert_equal false, book['is_hot']
     assert_nil book['created_at']

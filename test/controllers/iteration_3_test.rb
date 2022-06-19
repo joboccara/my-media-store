@@ -17,7 +17,7 @@ class Iteration3Test < TestHelperTraining
 
   test 'prices hot books at 9.99 during weekdays' do
     skip 'unskip at iteration 3'
-    book = create_book(title: 'Title of Book', isbn: '0321721330', purchase_price: 16, is_hot: true)
+    book = create_book(title: 'The Software Craftsman', isbn: '0134052501', purchase_price: 16, is_hot: true)
     Timecop.travel(Time.new(2022, 1, 3)) # Monday
     assert_price_equal 9.99, get_product_price(book.id)
     Timecop.travel(Time.new(2022, 1, 4)) # Tuesday
@@ -39,18 +39,18 @@ class Iteration3Test < TestHelperTraining
     begin
       CSV.open(Rails.root.join('app/assets/config/isbn_prices.csv'), 'wb') do |csv|
         csv << ['ISBN', 'price']
-        csv << ['9781603095136', '14.99']
-        csv << ['9781603095099', '19.99']
-        csv << ['9781603095051', '23.99']
+        csv << ['1449373321', '14.99']
+        csv << ['0131177052', '19.99']
+        csv << ['1736049119', '23.99']
       end
 
-      book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
+      book = create_book(title: 'Working Effectively with Legacy Code', isbn: '0131177052', purchase_price: 12, is_hot: false)
       assert_price_equal 19.99, get_product_price(book.id)
 
-      book = create_book(title: 'Premium book', isbn: '9781603095099', purchase_price: 12, is_hot: false)
+      book = create_book(title: 'Premium Working Effectively with Legacy Code', isbn: '0131177052', purchase_price: 12, is_hot: false)
       assert_price_equal 20.99, get_product_price(book.id)
 
-      book = create_book(title: 'Title of Book', isbn: '9781603095099', purchase_price: 12, is_hot: true)
+      book = create_book(title: 'Working Effectively with Legacy Code', isbn: '0131177052', purchase_price: 12, is_hot: true)
       Timecop.travel(Time.new(2022, 1, 3)) # Monday
       assert_price_equal 19.99, get_product_price(book.id)
     ensure
