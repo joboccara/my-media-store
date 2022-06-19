@@ -8,10 +8,10 @@ class Iteration3Test < TestHelperTraining
 
   test 'prices books at +25% margin' do
     skip 'unskip at iteration 3'
-    book1 = create_book(title: 'Book 1', isbn: '1', purchase_price: 12, is_hot: false)
+    book1 = create_book(title: 'Practical Object‑Oriented Design in Ruby', isbn: '9780132930871', purchase_price: 12, is_hot: false)
     assert_price_equal 15, get_product_price(book1.id)
 
-    book2 = create_book(title: 'Book 2', isbn: '2', purchase_price: 16, is_hot: false)
+    book2 = create_book(title: 'Clean Architecture', isbn: '9780134494326', purchase_price: 16, is_hot: false)
     assert_price_equal 20, get_product_price(book2.id)
   end
 
@@ -149,9 +149,9 @@ class Iteration3Test < TestHelperTraining
 
   test 'bumps price of any product by +5% if the title contains "premium"' do
     skip 'unskip at iteration 3'
-    book1 = create_book(title: 'Title of Book', isbn: '1', purchase_price: 12, is_hot: false)
+    book1 = create_book(title: 'Accelerate', isbn: '9781942788355', purchase_price: 12, is_hot: false)
     assert_price_equal 15, get_product_price(book1.id)
-    book = create_book(title: 'Title of premium Book', isbn: '1', purchase_price: 12, is_hot: false)
+    book = create_book(title: 'The Mythical Man-Month premium', isbn: '9780132119160', purchase_price: 12, is_hot: false)
     assert_price_equal 15.75, get_product_price(book.id)
 
     image = create_image(title: 'Title of Image', width: 800, height: 600, source: 'unknown', format: 'jpg')
@@ -160,6 +160,7 @@ class Iteration3Test < TestHelperTraining
     image = create_image(title: 'Premium title of Image', width: 800, height: 600, source: 'unknown', format: 'jpg')
     assert_price_equal 7.35, get_product_price(image.id)
 
+    Timecop.travel Time.new(2022, 1, 1) + 22.hours - 1.minute
     video = create_video(title: 'Title of Video', duration: 150, quality: '4k')
     assert_price_equal 12, get_product_price(video.id)
     video = create_video(title: 'Title of Video premium', duration: 150, quality: '4k')
@@ -170,6 +171,7 @@ class Iteration3Test < TestHelperTraining
 
   def get_product_price(id)
     get product_price_url(id)
+    assert_equal 200, response.status, response.body
     response.parsed_body.to_f
   end
 

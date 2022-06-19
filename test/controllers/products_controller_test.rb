@@ -1,10 +1,10 @@
-require "test_helper"
+require "test_helper_training"
 
-class ProductsControllerTest < ActionDispatch::IntegrationTest
+class ProductsControllerTest < TestHelperTraining
   test 'get all products' do
-    Item.create!(kind: 'book', title: 'Title of Book1', content: 'Contents of Book1')
-    Item.create!(kind: 'book', title: 'Title of Book2', content: 'Contents of Book2')
-    Item.create!(kind: 'video', title: 'Title of Video', content: 'Contents of Video')
+    create_book(title: 'Domain-Driven Design', content: 'Contents of Book1', isbn: '9780132181273', purchase_price: 1, is_hot: false)
+    create_book(title: 'Turn the Ship Around', content: 'Contents of Book2', isbn: '9781101623695', purchase_price: 2, is_hot: false)
+    create_video(title: 'Title of Video', content: 'Contents of Video', duration: 60, quality: 'SD')
 
     get '/products'
     products_by_kind = response.parsed_body
@@ -12,10 +12,10 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     books = products_by_kind['books']
     assert_equal 2, books.count
     assert_equal 'book', books[0]['kind']
-    assert_equal 'Title of Book1', books[0]['title']
+    assert_equal 'Domain-Driven Design', books[0]['title']
     assert_equal 'Contents of Book1', books[0]['content']
     assert_equal 'book', books[1]['kind']
-    assert_equal 'Title of Book2', books[1]['title']
+    assert_equal 'Turn the Ship Around', books[1]['title']
     assert_equal 'Contents of Book2', books[1]['content']
 
     videos = products_by_kind['videos']
@@ -25,8 +25,10 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'get the products of a month' do
-    Item.create!(kind: 'book', title: 'Title of Book', content: 'Contents of Book', created_at: '2019-01-01')
-    Item.create!(kind: 'video', title: 'Title of Video', content: 'Contents of Video', created_at: '2019-02-01')
+    book = create_book(title: 'The Lean Startup', content: 'Contents of Book', isbn: '0670921602', purchase_price: 1, is_hot: false)
+    Item.update(book.id, created_at: '2019-01-01')
+    video = create_video(title: 'Title of Video', content: 'Contents of Video', duration: 60, quality: 'SD')
+    Item.update(video.id, created_at: '2019-02-01')
 
     get '/products?month=february'
     products_by_kind = response.parsed_body

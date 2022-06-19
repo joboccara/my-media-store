@@ -6,9 +6,9 @@ class Iteration6Test < TestHelperTraining
     alice = create_user(first_name: 'Alice')
     bob = create_user(first_name: 'Bob')
 
-    book_1 = create_book(title: 'Book 1', isbn: '1', purchase_price: 42, is_hot: false)
-    book_2 = create_book(title: 'Book 2', isbn: '2', purchase_price: 42, is_hot: false)
-    book_3 = create_book(title: 'Book 3', isbn: '3', purchase_price: 42, is_hot: false)
+    book_1 = create_book(title: 'Remote', isbn: '0804137501', purchase_price: 42, is_hot: false)
+    book_2 = create_book(title: 'Rework', isbn: '0307463745', purchase_price: 42, is_hot: false)
+    book_3 = create_book(title: "It Doesn't Have to Be Crazy at Work", isbn: '0062874780', purchase_price: 42, is_hot: false)
 
     post purchases_url, params: { user_id: alice.id, product_id: book_1.id }
     post purchases_url, params: { user_id: alice.id, product_id: book_2.id }
@@ -18,14 +18,14 @@ class Iteration6Test < TestHelperTraining
 
     purchased_books = response.parsed_body
     assert_equal 2, purchased_books.size
-    assert_equal 'Book 1', purchased_books[0]['title']
-    assert_equal 'Book 2', purchased_books[1]['title']
+    assert_equal 'Remote', purchased_books[0]['title']
+    assert_equal 'Rework', purchased_books[1]['title']
   end
 
   test 'creates a download when purchasing a product' do
     skip 'unskip at iteration 6'
     user = create_user(first_name: 'Alice')
-    book = create_book(title: 'Title of book', isbn: '1', purchase_price: 42, is_hot: false)
+    book = create_book(title: 'Team Topologies', isbn: '9781942788829', purchase_price: 42, is_hot: false)
 
     # No downloads before purchase
     get downloads_url, params: { user_id: user.id }
@@ -38,19 +38,19 @@ class Iteration6Test < TestHelperTraining
     get downloads_url, params: { user_id: user.id }
     downloaded_books = response.parsed_body['books'] || []
     assert_equal 1, downloaded_books.count
-    assert_equal 'Title of book', downloaded_books[0]['title']
+    assert_equal 'Team Topologies', downloaded_books[0]['title']
   end
 
   test 'purchases contain a price and reference to the product purchased' do
     skip 'unskip at iteration 6'
     user = create_user(first_name: 'Alice')
-    book = create_book(title: 'Title of book', isbn: '1', purchase_price: 12, is_hot: false)
+    book = create_book(title: 'Extreme Ownership', isbn: '9783962670658', purchase_price: 12, is_hot: false)
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
-    assert_equal 'Title of book', purchased_book['title']
+    assert_equal 'Extreme Ownership', purchased_book['title']
     assert_equal book.id, purchased_book['item_id']
     assert_equal 15, purchased_book['price']
   end
@@ -58,14 +58,14 @@ class Iteration6Test < TestHelperTraining
   test 'the title and price in the invoice does not change' do
     skip 'unskip at iteration 6'
     user = create_user(first_name: 'Alice')
-    book = create_book(title: 'Book', isbn: '1', purchase_price: 42, is_hot: false)
+    book = create_book(title: 'Drive', isbn: '9781101524275', purchase_price: 42, is_hot: false)
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
-    update_book(item: book, title: 'New book', purchase_price: 24)
+    update_book(item: book, title: 'Drive: The surprising truth about what motivates us', purchase_price: 24)
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
-    assert_equal 'Book', purchased_book['title']
+    assert_equal 'Drive', purchased_book['title']
     assert_equal 52.5, purchased_book['price']
   end
 
