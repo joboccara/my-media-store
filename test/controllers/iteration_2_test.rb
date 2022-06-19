@@ -29,7 +29,7 @@ class Iteration2Test < TestHelperTraining
 
     video = products_by_kind['videos'][0]
     assert_equal 'video', video['kind']
-    assert_equal 'My video', video['title']
+    assert_equal 'Making Impossible States Impossible', video['title']
     assert_equal 120, video['duration']
     assert_equal 'FullHD', video['quality']
     assert_nil video['created_at']
