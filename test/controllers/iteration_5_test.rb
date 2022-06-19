@@ -2,7 +2,6 @@ require "test_helper_training"
 
 class Iteration5Test < TestHelperTraining
   test 'it sends a newsletter with the existing products' do
-    skip 'unskip at iteration 5'
     create_book(title: 'Software craft', isbn: '2100825208', purchase_price: 42, is_hot: false)
     create_image(title: 'XKCD: Good code', width: 800, height: 600, source: 'unknown', format: 'jpg')
     create_video(title: 'Living Documentation : vous allez aimer la documentation', duration: 120, quality: 'HD')

@@ -1,4 +1,4 @@
-class Download < ApplicationRecord
+class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :product
 end

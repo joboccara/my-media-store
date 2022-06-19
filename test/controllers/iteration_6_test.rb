@@ -2,7 +2,6 @@ require "test_helper_training"
 
 class Iteration6Test < TestHelperTraining
   test 'users can purchase products' do
-    skip 'unskip at iteration 6'
     alice = create_user(first_name: 'Alice')
     bob = create_user(first_name: 'Bob')
 
@@ -26,7 +25,6 @@ class Iteration6Test < TestHelperTraining
   end
 
   test 'creates a download when purchasing a product' do
-    skip 'unskip at iteration 6'
     user = create_user(first_name: 'Alice')
     book = create_book(title: 'Team Topologies', isbn: '9781942788829', purchase_price: 42, is_hot: false)
 
@@ -46,7 +44,6 @@ class Iteration6Test < TestHelperTraining
   end
 
   test 'purchases contain a price and reference to the product purchased' do
-    skip 'unskip at iteration 6'
     user = create_user(first_name: 'Alice')
     book = create_book(title: 'Extreme Ownership', isbn: '9783962670658', purchase_price: 12, is_hot: false)
 
@@ -56,18 +53,17 @@ class Iteration6Test < TestHelperTraining
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
     assert_equal 'Extreme Ownership', purchased_book['title']
-    assert_equal book.id, purchased_book['item_id']
+    assert_equal book.id, purchased_book['product_id']
     assert_equal 15, purchased_book['price']
   end
 
   test 'the title and price in the invoice does not change' do
-    skip 'unskip at iteration 6'
     user = create_user(first_name: 'Alice')
     book = create_book(title: 'Drive', isbn: '9781101524275', purchase_price: 42, is_hot: false)
 
     post purchases_url, params: { user_id: user.id, product_id: book.id }
     assert_equal 200, response.status, response.body
-    update_book(item: book, title: 'Drive: The surprising truth about what motivates us', purchase_price: 24)
+    update_book(product: book, title: 'Drive: The surprising truth about what motivates us', purchase_price: 24)
 
     get purchases_url, params: { user_id: user.id }
     purchased_book = response.parsed_body[0]
@@ -81,8 +77,7 @@ class Iteration6Test < TestHelperTraining
     User.create!(first_name: first_name)
   end
 
-  def update_book(item:, title: nil, purchase_price: nil)
-    item.title = title unless title.nil?
-    item.save!
+  def update_book(product:, title: nil, purchase_price: nil)
+    repo.update_book(id: product.id, title: title, purchase_price: purchase_price)
   end
 end

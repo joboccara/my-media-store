@@ -2,12 +2,9 @@ require 'date'
 
 class ProductsController < ApplicationController
   def index
-    if params[:month].present?
-      month_number = Date::MONTHNAMES.index(params[:month].capitalize)
-      month_number_string = "%02d" % month_number
-      @products = Item.where("strftime('%m', created_at) = ?", month_number_string)
-    else
-      @products = Item.all
-    end
+    month = params[:month]&.to_s
+
+    product_repo = ProductRepository.new
+    @products = month ? product_repo.get_month_products(month) : product_repo.get_products
   end
 end
