@@ -26,9 +26,9 @@ class ProductsControllerTest < TestHelperTraining
 
   test 'get the products of a month' do
     book = create_book(title: 'The Lean Startup', content: 'Contents of Book', isbn: '0670921602', purchase_price: 1, is_hot: false)
-    Item.update(book.id, created_at: '2019-01-01')
+    Item.update(book[:id], created_at: '2019-01-01')
     video = create_video(title: 'Title of Video', content: 'Contents of Video', duration: 60, quality: 'SD')
-    Item.update(video.id, created_at: '2019-02-01')
+    Item.update(video[:id], created_at: '2019-02-01')
 
     get '/products?month=february'
     products_by_kind = response.parsed_body

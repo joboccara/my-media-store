@@ -1,7 +1,9 @@
 class ProductPricesController < ApplicationController
   def show
-    # FIXME at iteration 1
-    puts "Compute price for item #{params[:id]}"
-    render json: 0
+    products = ProductRepository.new
+    product = products.get_product(params[:id])
+    price = PriceCalculator.new(product[:kind]).compute(product)
+
+    render json: price
   end
 end
