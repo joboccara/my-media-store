@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class BookPricer
+class Pricing::BookPricer
 
   def initialize(default_purchase_price, now)
     @default_purchase_price = default_purchase_price

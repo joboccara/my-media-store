@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ImagePricer
+class Pricing::ImagePricer
   def call(image)
     national_geographic_price(image) ||
       getty_price(image) ||

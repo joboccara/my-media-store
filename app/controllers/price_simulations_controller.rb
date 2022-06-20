@@ -1,6 +1,6 @@
 class PriceSimulationsController < ApplicationController
   def compute
-    render json: { price: Pricer.new.price(product) }
+    render json: { price: Pricing::Pricer.new.price(product) }
   end
 
   private

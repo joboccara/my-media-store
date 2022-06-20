@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class VideoPricer
+class Pricing::VideoPricer
   def initialize(now)
     @now = now
   end

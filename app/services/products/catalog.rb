@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class Products::Catalog
-  def initialize(pricer = Pricer.new)
+  def initialize(pricer = Pricing::Pricer.new)
     @pricer = pricer
   end
 
