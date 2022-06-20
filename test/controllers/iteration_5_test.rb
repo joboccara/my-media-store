@@ -24,8 +24,8 @@ class Iteration5Test < TestHelperTraining
     begin
       ENV['IMAGES_FROM_EXTERNAL_SERVICE'] = 'true'
       IMAGE_EXTERNAL_ID = 42
-      ImageExternalService.expects(:upload_image_details).with(width: 800, height: 600).returns(IMAGE_EXTERNAL_ID)
-      ImageExternalService.expects(:get_image_details).with(IMAGE_EXTERNAL_ID).returns({width: 800, height: 600})
+      ImageExternalService.expects(:upload_image_details).with(width: 800, height: 600, source 'Getty', format: 'jpg').returns(IMAGE_EXTERNAL_ID)
+      ImageExternalService.expects(:get_image_details).with(IMAGE_EXTERNAL_ID).returns({width: 800, height: 600, source: 'Getty', format: 'jpg'})
 
       image = create_image(title: 'Item 2', width: 800, height: 600, source: 'unknown', format: 'jpg')
 
