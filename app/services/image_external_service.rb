@@ -8,6 +8,6 @@ module ImageExternalService
   def self.upload_image_details(width:, height:, source:, format:)
     # DON'T WORRY ABOUT IMPLEMENTING THIS METHOD, IT IS MOCKED IN THE TESTS
     # call external service...
-    # { id: 42 }
+    # 42
   end
 end

@@ -21,8 +21,14 @@ class ProductRepository
 
   def create_image(title:, content: 'content', width:, height:, source:, format:, created_at: nil)
     item = Item.create!(kind: 'image', title: title, content: content, created_at: created_at)
-    image_details = ImageDetail.create!(item: item, width: width, height: height, source: source, format: format)
-    item_dto(item).merge(image_details_dto(image_details))
+    if (ENV['IMAGES_FROM_EXTERNAL_SERVICE'] == 'true')
+      image_external_id = ImageExternalService.upload_image_details(width: width, height: height, source: source, format: format)
+      image_external_details = ImageExternalDetail.create!(item: item, external_id: image_external_id)
+      item_dto(item).merge(image_details_dto(width: width, height: height, source: source, format: format))
+    else
+      image_details = ImageDetail.create!(item: item, width: width, height: height, source: source, format: format)
+      item_dto(item).merge(image_details_model_dto(image_details))
+    end
   end
 
   def create_video(title:, content: 'content', duration:, quality:, created_at: nil)
@@ -39,17 +45,44 @@ class ProductRepository
   private
 
   def build_products(items)
-    book_details = BookDetail.where(item: items).to_a
-    image_details = ImageDetail.where(item: items).to_a
-    video_details = VideoDetail.where(item: items).to_a
-    items.map do |item|
+    build_books(items.select { |item| item.kind == 'book' }) + 
+      build_images(items.select { |item| item.kind == 'image' }) +
+      build_videos(items.select { |item| item.kind == 'video' })
+  end
+
+  def build_books(book_items)
+    book_details = BookDetail.where(item: book_items).to_a
+    book_items.map do |item|
       belongs_to_item = ->(detail) { detail.item_id == item.id }
-      details_dto = case item.kind
-      when 'book' then book_details_dto(book_details.find(&belongs_to_item))
-      when 'image' then image_details_dto(image_details.find(&belongs_to_item))
-      when 'video' then video_details_dto(video_details.find(&belongs_to_item))
-      else raise "Unknown item kind #{item.kind.inspect}"
+      details_dto = book_details_dto(book_details.find(&belongs_to_item))
+      item_dto(item).merge(details_dto)
+    end
+  end
+
+  def build_images(image_items)
+    if (ENV['IMAGES_FROM_EXTERNAL_SERVICE'] == 'true')
+      image_external_details = ImageExternalDetail.where(item: image_items).to_a
+      image_items.map do |item|
+        belongs_to_item = ->(detail) { detail.item_id == item.id }
+        image_external_id = image_external_details.find(&belongs_to_item).external_id
+        details_dto = image_details_dto(**ImageExternalService.get_image_details(image_external_id))
+        item_dto(item).merge(details_dto)
       end
+    else
+      image_details = ImageDetail.where(item: image_items).to_a
+      image_items.map do |item|
+        belongs_to_item = ->(detail) { detail.item_id == item.id }
+        details_dto = image_details_model_dto(image_details.find(&belongs_to_item))
+        item_dto(item).merge(details_dto)
+      end
+    end
+  end
+
+  def build_videos(videos_items)
+    video_details = VideoDetail.where(item: videos_items).to_a
+    videos_items.map do |item|
+      belongs_to_item = ->(detail) { detail.item_id == item.id }
+      details_dto = video_details_dto(video_details.find(&belongs_to_item))
       item_dto(item).merge(details_dto)
     end
   end
@@ -71,12 +104,21 @@ class ProductRepository
     }
   end
 
-  def image_details_dto(image_details)
+  def image_details_model_dto(image_details)
     {
       width: image_details.width,
       height: image_details.height,
       source: image_details.source,
       format: image_details.format
+    }
+  end
+
+  def image_details_dto(width:, height:, source:, format:)
+    {
+      width: width,
+      height: height,
+      source: source,
+      format: format
     }
   end
 
