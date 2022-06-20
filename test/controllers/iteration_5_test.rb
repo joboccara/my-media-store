@@ -11,11 +11,11 @@ class Iteration5Test < TestHelperTraining
 
     expected_mail_content = <<~MAIL
     Books
-    * Software craft - 2100825208 - 52.50 € 
+    * Software craft - 2100825208 - 52.50
     Images
-    * XKCD: Good code - 800x600 - 7 €
+    * XKCD: Good code - 800x600 - 7.00
     Videos
-    * Living Documentation : you will like documentation - 120 seconds - 15 €
+    * Living Documentation : you will like documentation - 120 seconds - 15.00
     MAIL
 
     mail_sender = mock
