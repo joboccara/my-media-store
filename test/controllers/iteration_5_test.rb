@@ -24,6 +24,7 @@ class Iteration5Test < TestHelperTraining
   end
 
   test 'gets an image with its details from an external service' do
+    skip 'unskip at iteration 5'
     begin
       ENV['IMAGES_FROM_EXTERNAL_SERVICE'] = 'true'
       IMAGE_EXTERNAL_ID = 42
