@@ -58,8 +58,4 @@ class Iteration4Test < TestHelperTraining
     assert_equal res.keys, ['error']
     res['error']
   end
-
-  def assert_price_equal(expected, actual)
-    assert_in_delta expected, actual, 0.01
-  end
 end
