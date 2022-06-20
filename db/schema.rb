@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_20_205325) do
   create_table "downloads", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "product_id", null: false
@@ -24,21 +24,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
     t.string "kind"
     t.string "title"
     t.text "content"
-
     t.string "isbn"
     t.float "purchase_price"
     t.boolean "is_hot"
-
     t.integer "width"
     t.integer "height"
     t.string "source"
     t.string "format"
-
     t.integer "duration"
     t.string "quality"
-
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "product_id", null: false
+    t.float "price"
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_purchases_on_product_id"
+    t.index ["user_id"], name: "index_purchases_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -49,4 +56,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_01_090003) do
 
   add_foreign_key "downloads", "products"
   add_foreign_key "downloads", "users"
+  add_foreign_key "purchases", "products"
+  add_foreign_key "purchases", "users"
 end
