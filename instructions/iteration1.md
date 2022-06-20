@@ -1,7 +1,7 @@
 # Iteration 1: compute price
 
 Now we want to make money! Let's add some price to our items.
-Product price is available as a standalone endpoint (`product_prices_controller`), returning only the price for the required product.
+Product price is displayed in the products list.
 
 Here are the pricing rules we want to use:
 
