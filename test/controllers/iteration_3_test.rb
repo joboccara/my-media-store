@@ -147,7 +147,7 @@ class Iteration3Test < TestHelperTraining
     assert_price_equal 7.2, get_product_price(video)
   end
 
-  test 'bumps price of any product by +5% if the title contains "premium"' do
+  test 'bumps price of any book or video by +5% if the title contains "premium"' do
     skip 'unskip at iteration 3'
     book1 = create_book(title: 'Accelerate', isbn: '9781942788355', purchase_price: 12, is_hot: false)
     assert_price_equal 15, get_product_price(book1)
@@ -158,7 +158,7 @@ class Iteration3Test < TestHelperTraining
     assert_price_equal 7, get_product_price(image)
 
     image = create_image(title: 'Premium title of Image', width: 800, height: 600, source: 'unknown', format: 'jpg')
-    assert_price_equal 7.35, get_product_price(image)
+    assert_price_equal 7, get_product_price(image)
 
     Timecop.travel Time.new(2022, 1, 1) + 22.hours - 1.minute
     video = create_video(title: 'Un monolithe microservices ready', duration: 150, quality: '4k')

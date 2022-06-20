@@ -31,10 +31,10 @@ class Iteration1Test < TestHelperTraining
     image = create_image(title: 'Image 1', content: 'content')
     assert_price_equal 7, get_product_price(image)
   end
-  test 'premium images are 5% more expensive' do
+  test 'premium images are not more expensive' do
     skip 'unskip at iteration 1'
     image = create_image(title: 'Premium image 1', content: 'content')
-    assert_price_equal 7.35, get_product_price(image)
+    assert_price_equal 7, get_product_price(image)
   end
 
   test 'video day price is 15' do
@@ -49,13 +49,13 @@ class Iteration1Test < TestHelperTraining
     video = create_video(title: 'From Rails to Elm and Haskell', content: 'content')
     assert_price_equal 9, get_product_price(video)
   end
-  test 'premium video are 5% more expensive during the day' do
+  test 'premium videos are 5% more expensive during the day' do
     skip 'unskip at iteration 1'
     Timecop.travel(Time.now.change(hour: 10))
     video = create_video(title: 'Types, and Why You Should Care PREMIUM', content: 'content')
     assert_price_equal 15.75, get_product_price(video)
   end
-  test 'premium video are 5% more expensive during the night' do
+  test 'premium videos are 5% more expensive during the night' do
     skip 'unskip at iteration 1'
     Timecop.travel(Time.now.change(hour: 2))
     video = create_video(title: 'DDD Sous Pression, premium', content: 'content')
